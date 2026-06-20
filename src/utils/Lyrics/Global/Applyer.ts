@@ -57,6 +57,13 @@ export default async function ApplyLyrics(lyricsContent: [object | string, numbe
 
   const [descriptor, _status] = lyricsContent;
 
+  if (descriptor === "update-required") {
+    $currentLyricsType.set("None");
+    $currentLyricsData.set("");
+    EmitApply("None", null);
+    return;
+  }
+
   let noticeContent: string | null = null;
 
   switch (descriptor) {

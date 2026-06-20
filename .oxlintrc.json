@@ -9,6 +9,7 @@
     "dist/**",
     "dist_legacy/**",
     "build/**",
+    "release/**",
     ".spicetify/**",
     "public-storage/**",
 

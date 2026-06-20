@@ -6,16 +6,27 @@
   pointer-events: none;
   position: absolute;
   top: 0;
+  filter: saturate(2.5) brightness(0.65);
   width: 100%;
   transform-origin: center center;
-  filter: saturate(2.5) brightness(0.65);
 }
 
+.spicy-dynamic-bg-shell {
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  position: absolute;
+  z-index: 0;
+}
+
+body:has(.starrynight-bg-container) #main .spicy-dynamic-bg-shell,
 body:has(.starrynight-bg-container) #main .spicy-dynamic-bg:not(.StaticBackground),
+body:has(.glassify-bg .bg.animated) #main .spicy-dynamic-bg-shell,
 body:has(.glassify-bg .bg.animated) #main .spicy-dynamic-bg:not(.StaticBackground) {
   display: none !important;
 }
 
+aside .spicy-dynamic-bg-shell,
 aside .spicy-dynamic-bg {
   border-radius: var(--section-border-radius, 8px);
 }
@@ -32,12 +43,167 @@ aside .spicy-dynamic-bg {
   max-width: 100%;
 }
 
-aside .spicy-dynamic-bg {
-  filter: brightness(0.6) saturate(2.65);
+.spicy-dynamic-bg-lights,
+.spicy-dynamic-bg-stars {
+  height: 100%;
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+  width: 100%;
+}
+
+.spicy-dynamic-bg-lights {
+  mix-blend-mode: screen;
+  opacity: 0.62;
+}
+
+.spicy-dynamic-bg-stars {
+  opacity: 0.86;
+  mix-blend-mode: screen;
+}
+
+.spicy-dynamic-bg-star {
+  --star-brightness: 1;
+  --star-glow: 0.18;
+  --star-flare: 0;
+  --star-core-opacity: 0.78;
+  --star-scale: 1;
+  --star-rotation: 0deg;
+  color: rgba(255, 255, 255, 0.95);
+  filter: brightness(var(--star-brightness, 1)) saturate(1.08);
+  left: 0;
+  opacity: 0.2;
+  position: absolute;
+  top: 0;
+  transform: translate(-50%, -50%) scale(var(--star-scale, 1)) rotate(var(--star-rotation, 0deg));
+  transform-origin: center;
+  will-change: transform, opacity, filter;
+  width: var(--star-size, 4px);
+  height: var(--star-size, 4px);
+}
+
+.spicy-dynamic-bg-star::before,
+.spicy-dynamic-bg-star::after {
+  content: "";
+  inset: 0;
+  position: absolute;
+  transform-origin: center;
+}
+
+.spicy-dynamic-bg-star.softDot {
+  border-radius: 999px;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, var(--star-core-opacity, 0.82)) 0 16%,
+    rgba(255, 255, 255, 0.52) 34%,
+    rgba(255, 255, 255, 0.12) 54%,
+    transparent 76%
+  );
+  box-shadow:
+    0 0 calc(var(--star-size, 4px) * 1.15)
+      rgba(255, 255, 255, calc(0.05 + var(--star-glow, 0.2) * 0.16)),
+    0 0 calc(var(--star-size, 4px) * 2.2)
+      rgba(255, 255, 255, calc(0.02 + var(--star-glow, 0.2) * 0.08));
+}
+
+.spicy-dynamic-bg-star.realStar {
+  background:
+    radial-gradient(
+      circle,
+      rgba(255, 255, 255, var(--star-core-opacity, 0.84)) 0 10%,
+      rgba(255, 255, 255, 0.3) 18%,
+      transparent 50%
+    ),
+    linear-gradient(to right, transparent 44%, rgba(255, 255, 255, 0.94) 50%, transparent 56%),
+    linear-gradient(to bottom, transparent 44%, rgba(255, 255, 255, 0.9) 50%, transparent 56%);
+  box-shadow:
+    0 0 calc(var(--star-size, 4px) * 1.25)
+      rgba(255, 255, 255, calc(0.08 + var(--star-glow, 0.2) * 0.22)),
+    0 0 calc(var(--star-size, 4px) * 2.9)
+      rgba(255, 255, 255, calc(0.03 + var(--star-glow, 0.2) * 0.12));
+}
+
+.spicy-dynamic-bg-star.realStar::before {
+  background:
+    linear-gradient(to right, transparent 47%, rgba(255, 255, 255, 0.78) 50%, transparent 53%),
+    linear-gradient(to bottom, transparent 47%, rgba(255, 255, 255, 0.74) 50%, transparent 53%);
+  transform: rotate(45deg) scale(1.02);
+  opacity: calc(0.18 + var(--star-flare, 0) * 0.56);
+}
+
+.spicy-dynamic-bg-star.realStar::after {
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, calc(0.05 + var(--star-glow, 0.2) * 0.16)),
+    transparent 72%
+  );
+}
+
+.spicy-dynamic-bg-star.sparkleStar {
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, var(--star-core-opacity, 0.84)) 0 9%,
+    rgba(255, 255, 255, 0.28) 18%,
+    transparent 48%
+  );
+  box-shadow:
+    0 0 calc(var(--star-size, 4px) * 1.45)
+      rgba(255, 255, 255, calc(0.08 + var(--star-glow, 0.2) * 0.28)),
+    0 0 calc(var(--star-size, 4px) * 3.5)
+      rgba(255, 255, 255, calc(0.04 + var(--star-glow, 0.2) * 0.16));
+}
+
+.spicy-dynamic-bg-star.sparkleStar::before {
+  background:
+    linear-gradient(45deg, transparent 46%, rgba(255, 255, 255, 0.99) 50%, transparent 54%),
+    linear-gradient(-45deg, transparent 46%, rgba(255, 255, 255, 0.97) 50%, transparent 54%);
+  transform: scale(1.34);
+  opacity: calc(0.26 + var(--star-flare, 0) * 0.84);
+}
+
+.spicy-dynamic-bg-star.sparkleStar::after {
+  background:
+    linear-gradient(to right, transparent 48%, rgba(255, 255, 255, 0.62) 50%, transparent 52%),
+    linear-gradient(to bottom, transparent 48%, rgba(255, 255, 255, 0.62) 50%, transparent 52%);
+  transform: scale(0.98);
+  opacity: calc(0.08 + var(--star-flare, 0) * 0.5);
+}
+
+.spicy-dynamic-bg-star.crossStar {
+  background:
+    radial-gradient(
+      circle,
+      rgba(255, 255, 255, var(--star-core-opacity, 0.82)) 0 7%,
+      rgba(255, 255, 255, 0.22) 14%,
+      transparent 34%
+    ),
+    linear-gradient(to right, transparent 46%, rgba(255, 255, 255, 0.99) 50%, transparent 54%),
+    linear-gradient(to bottom, transparent 46%, rgba(255, 255, 255, 0.97) 50%, transparent 54%);
+  box-shadow:
+    0 0 calc(var(--star-size, 4px) * 1.35)
+      rgba(255, 255, 255, calc(0.06 + var(--star-glow, 0.2) * 0.24)),
+    0 0 calc(var(--star-size, 4px) * 3.1)
+      rgba(255, 255, 255, calc(0.03 + var(--star-glow, 0.2) * 0.14));
+}
+
+.spicy-dynamic-bg-star.crossStar::before {
+  background:
+    linear-gradient(to right, transparent 49%, rgba(255, 255, 255, 0.82) 50%, transparent 51%),
+    linear-gradient(to bottom, transparent 49%, rgba(255, 255, 255, 0.82) 50%, transparent 51%);
+  transform: scale(1.62);
+  opacity: calc(0.18 + var(--star-flare, 0) * 0.62);
+}
+
+.spicy-dynamic-bg-star.crossStar::after {
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, calc(0.04 + var(--star-glow, 0.2) * 0.14)),
+    transparent 72%
+  );
 }
 
 @property --sl_videocanvas_mask-stop {
-  syntax: '<percentage>';
+  syntax: "<percentage>";
   inherits: false;
   initial-value: 80%;
 }
@@ -45,13 +211,29 @@ aside .spicy-dynamic-bg {
 aside video {
   --sl_videocanvas_mask-stop: 25%;
   filter: brightness(0.65);
-  opacity: .95;
-  mask-image: linear-gradient(to bottom, transparent -5%, black 15%, black var(--sl_videocanvas_mask-stop), transparent 100%);
-  transition: --sl_videocanvas_mask-stop 1s cubic-bezier(0,0,0,1), filter 0.2s linear;
+  opacity: 0.95;
+  mask-image: linear-gradient(
+    to bottom,
+    transparent -5%,
+    black 15%,
+    black var(--sl_videocanvas_mask-stop),
+    transparent 100%
+  );
+  transition:
+    --sl_videocanvas_mask-stop 1s cubic-bezier(0, 0, 0, 1),
+    filter 0.2s linear;
 }
 
-aside .main-nowPlayingView-coverArtContainer:not(.XixZ4ftG53tYcM4KohE1, .yiy_EezkGycfPvS3, .pUIBQ9cykHKYx2A2ZIPA) video,
-.main-nowPlayingView-nowPlayingGrid > div:has(video):not(.yiy_EezkGycfPvS3, .XixZ4ftG53tYcM4KohE1, .pUIBQ9cykHKYx2A2ZIPA) video {
+aside
+  .main-nowPlayingView-coverArtContainer:not(
+    .XixZ4ftG53tYcM4KohE1,
+    .yiy_EezkGycfPvS3,
+    .pUIBQ9cykHKYx2A2ZIPA
+  )
+  video,
+.main-nowPlayingView-nowPlayingGrid
+  > div:has(video):not(.yiy_EezkGycfPvS3, .XixZ4ftG53tYcM4KohE1, .pUIBQ9cykHKYx2A2ZIPA)
+  video {
   --sl_videocanvas_mask-stop: 80%;
 }
 
@@ -73,8 +255,12 @@ div.UUydeXMsXVZofB0YAOgm:has(.main-trackInfo-container)::before,
 div.main-nowPlayingView-contextItemInfo:has(.main-trackInfo-container)::before,
 div.UUydeXMsXVZofB0YAOgm:has(.main-trackInfo-container)::after,
 div.main-nowPlayingView-contextItemInfo:has(.main-trackInfo-container)::after,
-:is(.main-nowPlayingView-nowPlayingWidget, .NowPlayingView, aside) div:has(> .main-nowPlayingView-coverArtVisualEnhancement) :not(.main-nowPlayingView-coverArtVisualEnhancement):has(video)::before,
-:is(.main-nowPlayingView-nowPlayingWidget, .NowPlayingView, aside) div:has(> .main-nowPlayingView-coverArtVisualEnhancement) :not(.main-nowPlayingView-coverArtVisualEnhancement):has(video)::after {
+:is(.main-nowPlayingView-nowPlayingWidget, .NowPlayingView, aside)
+  div:has(> .main-nowPlayingView-coverArtVisualEnhancement)
+  :not(.main-nowPlayingView-coverArtVisualEnhancement):has(video)::before,
+:is(.main-nowPlayingView-nowPlayingWidget, .NowPlayingView, aside)
+  div:has(> .main-nowPlayingView-coverArtVisualEnhancement)
+  :not(.main-nowPlayingView-coverArtVisualEnhancement):has(video)::after {
   display: none !important;
 }
 
@@ -101,7 +287,8 @@ aside:has(.spicy-dynamic-bg) .iHa_q9pq4un3VNRQgwTx {
 }
 
 /* Hide sidebar background when in fullscreen lyrics mode */
-body:has(#SpicyLyricsPage.Fullscreen) .Root__right-sidebar
+body:has(#SpicyLyricsPage.Fullscreen)
+  .Root__right-sidebar
   aside:is(.NowPlayingView, .spicy-dynamic-bg-in-this)
   .spicy-dynamic-bg {
   display: none;
@@ -167,7 +354,7 @@ body:has(#SpicyLyricsPage.Fullscreen) .Root__right-sidebar
 
 .NowPlayingView .main-nowPlayingView-headerCloseButton {
   color: var(--spice-text);
-  opacity: .8 !important;
+  opacity: 0.8 !important;
 }
 
 .NowPlayingView .main-nowPlayingView-headerCloseButton:hover,

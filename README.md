@@ -12,11 +12,23 @@
 
 ## 2. Externally (not recommended)
 1. Make sure you have [Spicetify](https://spicetify.app) installed
-2. Download the [spicy-lyrics.mjs](./builds/spicy-lyrics.mjs) file
-3. Put the file inside the Spicetify Extensions directory. Find the correct directory here: [https://spicetify.app/docs/customization/extensions#manual-installation](https://spicetify.app/docs/customization/extensions#manual-installation)
-4. Then, run ```spicetify config extensions spicy-lyrics.mjs```
+2. Build the local custom version with `bun run build` or use `install-spicy-lyrics.bat`
+3. Copy both [spicy-lyrics.js](./dist/spicy-lyrics.js) and [spicy-lyrics.mjs](./builds/spicy-lyrics.mjs) into the Spicetify Extensions directory. Find the correct directory here: [https://spicetify.app/docs/customization/extensions#manual-installation](https://spicetify.app/docs/customization/extensions#manual-installation)
+4. Then, run ```spicetify config extensions spicy-lyrics.js```
 5. Then apply Spicetify by running ```spicetify apply```
 6. All done!
+
+## Keeping this custom branch up to date
+
+If you are using the custom visualizer branch from this workspace, use the upstream-safe workflow in [docs/UPSTREAM_UPDATES.md](./docs/UPSTREAM_UPDATES.md).
+
+Quick commands:
+
+```bash
+bun run upstream:check
+bun run upstream:update
+update-from-upstream.bat
+```
 
 [![Github Version](https://img.shields.io/github/v/release/spikerko/spicy-lyrics)](https://github.com/spikerko/spicy-lyrics/) [![Github Stars badge](https://img.shields.io/github/stars/spikerko/spicy-lyrics?style=social)](https://github.com/spikerko/spicy-lyrics/) [![Discord Badge](https://dcbadge.limes.pink/api/server/uqgXU5wh8j?style=flat)](https://discord.com/invite/uqgXU5wh8j)
 

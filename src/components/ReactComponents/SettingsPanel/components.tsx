@@ -27,9 +27,7 @@ export function Row({
         {description && <span className="sl-sp-description">{description}</span>}
       </div>
       <div className="sl-sp-control">{children}</div>
-      {disabled && disabledReason && (
-        <div className="sl-sp-row-tooltip">{disabledReason}</div>
-      )}
+      {disabled && disabledReason && <div className="sl-sp-row-tooltip">{disabledReason}</div>}
     </div>
   );
 }
@@ -61,8 +59,8 @@ export function Select({
   disabled,
 }: {
   value: string;
-  options: string[];
-  labels?: string[];
+  options: readonly string[];
+  labels?: readonly string[];
   onChange: (v: string) => void;
   disabled?: boolean;
 }) {
@@ -82,17 +80,49 @@ export function Select({
   );
 }
 
+export function Slider({
+  value,
+  onChange,
+  min = 0,
+  max = 100,
+  step = 1,
+  valueLabel,
+  disabled,
+}: {
+  value: number;
+  onChange: (v: number) => void;
+  min?: number;
+  max?: number;
+  step?: number;
+  valueLabel?: string;
+  disabled?: boolean;
+}) {
+  return (
+    <div className="sl-sp-slider-wrap">
+      <input
+        className="sl-sp-slider"
+        type="range"
+        min={min}
+        max={max}
+        step={step}
+        value={value}
+        onChange={(e) => onChange(Number(e.currentTarget.value))}
+        disabled={disabled}
+      />
+      <span className="sl-sp-slider-value">{valueLabel ?? String(value)}</span>
+    </div>
+  );
+}
+
 export function SectionTitle({ children }: { children: React.ReactNode }) {
   return <p className="sl-sp-section-title">{children}</p>;
 }
 
-export function SearchBar({
-  value,
-  onChange,
-}: {
-  value: string;
-  onChange: (v: string) => void;
-}) {
+export function SubsectionTitle({ children }: { children: React.ReactNode }) {
+  return <p className="sl-sp-subsection-title">{children}</p>;
+}
+
+export function SearchBar({ value, onChange }: { value: string; onChange: (v: string) => void }) {
   return (
     <div className="sl-sp-search-wrap">
       <svg
@@ -104,21 +134,55 @@ export function SearchBar({
         xmlns="http://www.w3.org/2000/svg"
       >
         <circle cx="6" cy="6" r="4.5" stroke="currentColor" strokeWidth="1.5" />
-        <line x1="9.5" y1="9.5" x2="13" y2="13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+        <line
+          x1="9.5"
+          y1="9.5"
+          x2="13"
+          y2="13"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+        />
       </svg>
       <input
         className="sl-sp-search"
         type="text"
-        placeholder="Search settings…"
+        placeholder="Search settings..."
         value={value}
         onChange={(e) => onChange(e.currentTarget.value)}
         spellCheck={false}
       />
       {value && (
-        <button className="sl-sp-search-clear" onClick={() => onChange("")} aria-label="Clear search">
-          <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <line x1="1" y1="1" x2="9" y2="9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-            <line x1="9" y1="1" x2="1" y2="9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+        <button
+          className="sl-sp-search-clear"
+          onClick={() => onChange("")}
+          aria-label="Clear search"
+        >
+          <svg
+            width="10"
+            height="10"
+            viewBox="0 0 10 10"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <line
+              x1="1"
+              y1="1"
+              x2="9"
+              y2="9"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+            />
+            <line
+              x1="9"
+              y1="1"
+              x2="1"
+              y2="9"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+            />
           </svg>
         </button>
       )}
@@ -184,7 +248,9 @@ export function FilterDropdown({
 
   const portalTarget =
     open && typeof document !== "undefined"
-      ? (document.querySelector("sl-generic-modal.SpicyLyricsModal .sl-modal-overlay") as HTMLElement | null)
+      ? (document.querySelector(
+          "sl-generic-modal.SpicyLyricsModal .sl-modal-overlay"
+        ) as HTMLElement | null)
       : null;
 
   return (
@@ -204,7 +270,12 @@ export function FilterDropdown({
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
         >
-          <path d="M1 1h11M3 5h7M5 9h3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+          <path
+            d="M1 1h11M3 5h7M5 9h3"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+          />
         </svg>
         <span className="sl-sp-filter-label">{value === "All" ? "Filter" : value}</span>
         <svg
@@ -215,11 +286,19 @@ export function FilterDropdown({
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
         >
-          <path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          <path
+            d="M2 3.5L5 6.5L8 3.5"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
         </svg>
       </button>
 
-      {open && coords && portalTarget &&
+      {open &&
+        coords &&
+        portalTarget &&
         createPortal(
           <div
             ref={menuRef}
@@ -243,8 +322,20 @@ export function FilterDropdown({
                 >
                   <span className="sl-sp-filter-item-check">
                     {isActive && (
-                      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M1.5 5L4 7.5L8.5 2.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                      <svg
+                        width="10"
+                        height="10"
+                        viewBox="0 0 10 10"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M1.5 5L4 7.5L8.5 2.5"
+                          stroke="currentColor"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
                       </svg>
                     )}
                   </span>
@@ -253,7 +344,7 @@ export function FilterDropdown({
               );
             })}
           </div>,
-          portalTarget,
+          portalTarget
         )}
     </div>
   );

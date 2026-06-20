@@ -1,12 +1,15 @@
+import type { KawarpOptions } from "@kawarp/core";
 import { $staticBackgroundMode } from "../../utils/stores.ts";
 import Global from "../Global/Global.ts";
 import { SpotifyPlayer } from "../Global/SpotifyPlayer.ts";
 import ArtistVisuals from "./ArtistVisuals/Main.ts";
 import { PageContainer } from "../Pages/PageView.ts";
-import Kawarp, { type KawarpOptions } from "@kawarp/core";
-import { BackgroundAnimationController, type AudioAnalysisData } from "./BackgroundAnimationController.ts";
+import { AliveArtworkBackground } from "./AliveArtworkBackground.ts";
+import { BackgroundAnimationController } from "./BackgroundAnimationController.ts";
+import { BackgroundAudioEngine, DEFAULT_SNAPSHOT } from "./BackgroundAudioEngine.ts";
+import type { AudioAnalysisData, BackgroundAudioSnapshot } from "./types.ts";
 import { getDynamicAudioAnalysis } from "../../utils/audioAnalysis.ts";
-import Logger from "../../utils/logger.ts";
+import Logger from "../../utils/Logger.ts";
 
 const dynamicBgLogger = new Logger("Dynamic Background");
 
@@ -18,45 +21,129 @@ export const KawarpOptionsStatic: KawarpOptions = {
   saturation: 1.5,
   dithering: 0.008,
   transitionDuration: 500,
-  // tintColor: [0.16, 0.16, 0.24],
-  tintIntensity: 0, // 0.15
+  tintIntensity: 0,
   scale: 1,
-}
+};
 
 const COLOR_BG_FALLBACK_RGB = "18, 18, 18, 1";
-let cachedColorBackgroundEl: HTMLElement | null = null;
+const dynamicBackgrounds = new Map<HTMLElement | string, AliveArtworkBackground>();
+const audioEngine = new BackgroundAudioEngine();
+const animationController = new BackgroundAnimationController();
 
-export const KawarpMap = new Map<HTMLElement | string, Kawarp>();
-const animSpeedController = new BackgroundAnimationController();
+let cachedColorBackgroundEl: HTMLElement | null = null;
+let renderHandle: number | null = null;
 
 interface ApplyDynamicBackgroundOpts {
   doTransitionDurationAppendWithPromise?: boolean;
 }
 
-export default async function ApplyDynamicBackground(element: HTMLElement, tag?: string, opts: ApplyDynamicBackgroundOpts = {}) {
+function startRenderLoop() {
+  if (renderHandle !== null) return;
+
+  const renderFrame = (now: number) => {
+    renderHandle = null;
+    let shouldContinue = false;
+
+    dynamicBackgrounds.forEach((background, key) => {
+      const alive = background.render(now);
+      if (!alive) {
+        background.dispose();
+        dynamicBackgrounds.delete(key);
+        return;
+      }
+      shouldContinue = true;
+    });
+
+    if (shouldContinue) {
+      renderHandle = requestAnimationFrame(renderFrame);
+    }
+  };
+
+  renderHandle = requestAnimationFrame(renderFrame);
+}
+
+function stopRenderLoopIfIdle() {
+  if (dynamicBackgrounds.size > 0) return;
+  if (renderHandle !== null) {
+    cancelAnimationFrame(renderHandle);
+    renderHandle = null;
+  }
+  audioEngine.dispose();
+}
+
+function removeDynamicNodes(host: HTMLElement) {
+  host
+    .querySelectorAll<HTMLElement>(".spicy-dynamic-bg-shell")
+    .forEach((element) => element.remove());
+  host.querySelectorAll<HTMLElement>(".spicy-dynamic-bg").forEach((element) => {
+    if (
+      element.classList.contains("StaticBackground") ||
+      element.classList.contains("ColorBackground")
+    )
+      return;
+    element.remove();
+  });
+}
+
+function removeStaticNodes(host: HTMLElement) {
+  host
+    .querySelectorAll<HTMLElement>(
+      ".spicy-dynamic-bg.StaticBackground, .spicy-dynamic-bg.ColorBackground"
+    )
+    .forEach((element) => {
+      element.remove();
+    });
+}
+
+export function disposeDynamicBackground(target: HTMLElement | string) {
+  const background = dynamicBackgrounds.get(target);
+  if (!background) return;
+  background.dispose();
+  dynamicBackgrounds.delete(target);
+  stopRenderLoopIfIdle();
+}
+
+export function disposeDynamicBackgroundsIn(host: HTMLElement) {
+  for (const [key, background] of dynamicBackgrounds.entries()) {
+    if (background.host === host) {
+      background.dispose();
+      dynamicBackgrounds.delete(key);
+    }
+  }
+  stopRenderLoopIfIdle();
+}
+
+export default async function ApplyDynamicBackground(
+  element: HTMLElement,
+  tag?: string,
+  opts: ApplyDynamicBackgroundOpts = {}
+) {
   if (!element) return;
+
   dynamicBgLogger.debug("Applying dynamic background", { tag });
   const preCurrentImgCover = SpotifyPlayer.GetCover("large") ?? "";
   const currentImgCover = preCurrentImgCover?.replace("spotify:image:", "https://i.scdn.co/image/");
-  const IsEpisode = SpotifyPlayer.GetContentType() === "episode";
+  const isEpisode = SpotifyPlayer.GetContentType() === "episode";
+  const backgroundKey = tag ?? element;
 
   const artists = SpotifyPlayer.GetArtists() ?? [];
-  const TrackArtist =
+  const trackArtist =
     artists.length > 0 && artists[0]?.uri
       ? artists[0].uri.replace("spotify:artist:", "")
       : undefined;
 
-  const TrackId = SpotifyPlayer.GetId() ?? undefined;
-  
+  const trackId = SpotifyPlayer.GetId() ?? undefined;
   const staticBgMode = $staticBackgroundMode.get();
+
   if (staticBgMode !== "off") {
+    disposeDynamicBackground(backgroundKey);
+    removeDynamicNodes(element);
+
     if (staticBgMode === "color") {
-      // First, create/init the background with black as a fallback
       let dynamicBg = element.querySelector<HTMLElement>(".spicy-dynamic-bg.ColorBackground");
       if (!dynamicBg) {
         dynamicBg = document.createElement("div");
         dynamicBg.classList.add("spicy-dynamic-bg", "ColorBackground");
-        // Set initial fallback colors to black
         dynamicBg.style.setProperty("--MinContrastColor", COLOR_BG_FALLBACK_RGB);
         dynamicBg.style.setProperty("--HighContrastColor", COLOR_BG_FALLBACK_RGB);
         dynamicBg.style.setProperty("--OverlayColor", COLOR_BG_FALLBACK_RGB);
@@ -64,17 +151,21 @@ export default async function ApplyDynamicBackground(element: HTMLElement, tag?:
       }
       cachedColorBackgroundEl = dynamicBg;
 
-      // Now fetch the real colors and apply them
       try {
         const colorQuery = await Spicetify.GraphQL.Request(
           Spicetify.GraphQL.Definitions.getDynamicColorsByUris,
           {
-            imageUris: [SpotifyPlayer.GetCover("large") ?? ""]
+            imageUris: [SpotifyPlayer.GetCover("large") ?? ""],
           }
         );
 
         const colorResponse = colorQuery.data.dynamicColors[0];
-        const colorBestFit = colorResponse.bestFit === "DARK" ? "dark" : colorResponse.bestFit === "LIGHT" ? "light" : "dark";
+        const colorBestFit =
+          colorResponse.bestFit === "DARK"
+            ? "dark"
+            : colorResponse.bestFit === "LIGHT"
+              ? "light"
+              : "dark";
 
         const colors = colorResponse[colorBestFit];
         const fromColorObj = colors.minContrast;
@@ -92,110 +183,92 @@ export default async function ApplyDynamicBackground(element: HTMLElement, tag?:
         dynamicBg.style.setProperty("--MinContrastColor", fromColor);
         dynamicBg.style.setProperty("--HighContrastColor", toColor);
         dynamicBg.style.setProperty("--OverlayColor", overlayColor);
-      } catch (err) {
-        // If the color fetch fails, just keep the black fallback
-        dynamicBgLogger.error("Failed to fetch dynamic colors, using fallback black background", err);
+      } catch (error) {
+        dynamicBgLogger.error(
+          "Failed to fetch dynamic colors, using fallback black background",
+          error
+        );
       }
       return;
     }
-    const currentImgCover = await GetStaticBackground(TrackArtist, TrackId);
 
-    if (IsEpisode || !currentImgCover) return;
+    const staticBackgroundUrl = await GetStaticBackground(trackArtist, trackId);
+    if (isEpisode || !staticBackgroundUrl) return;
+
     const prevBg = element.querySelector<HTMLElement>(".spicy-dynamic-bg.StaticBackground");
-
-    if (prevBg && prevBg.getAttribute("data-cover-id") === currentImgCover) {
+    if (prevBg && prevBg.getAttribute("data-cover-id") === staticBackgroundUrl) {
       return;
     }
+
     const dynamicBg = document.createElement("div");
-
     dynamicBg.classList.add("spicy-dynamic-bg", "StaticBackground", "Hidden");
-
-    //const processedCover = `https://i.scdn.co/image/${currentImgCover.replace("spotify:image:", "")}`;
-
-    dynamicBg.style.backgroundImage = `url("${currentImgCover}")`;
-    dynamicBg.setAttribute("data-cover-id", currentImgCover);
+    dynamicBg.style.backgroundImage = `url("${staticBackgroundUrl}")`;
+    dynamicBg.setAttribute("data-cover-id", staticBackgroundUrl);
     element.appendChild(dynamicBg);
 
     setTimeout(() => {
       if (prevBg) {
         prevBg.classList.add("Hidden");
-        setTimeout(() => prevBg?.remove(), 500);
+        setTimeout(() => prevBg.remove(), 500);
       }
       dynamicBg.classList.remove("Hidden");
     }, 80);
+    return;
+  }
+
+  removeStaticNodes(element);
+
+  let background = dynamicBackgrounds.get(backgroundKey);
+  if (!background || background.host !== element) {
+    disposeDynamicBackground(backgroundKey);
+    removeDynamicNodes(element);
+    background = new AliveArtworkBackground({
+      host: element,
+      key: backgroundKey,
+      readAudioSnapshot: getBackgroundAudioSnapshot,
+      kawarpOptions: KawarpOptionsStatic,
+    });
+    dynamicBackgrounds.set(backgroundKey, background);
+  }
+
+  await background.loadCover(currentImgCover);
+  startRenderLoop();
+
+  const msDelay = KawarpOptionsStatic.transitionDuration * 2;
+  if (opts.doTransitionDurationAppendWithPromise) {
+    await new Promise((resolve) => setTimeout(resolve, msDelay));
+    await background.setTransitionDuration(KawarpTransitionDuration);
   } else {
-    const existingElement = element.querySelector<HTMLElement>(".spicy-dynamic-bg");
-  
-    if (existingElement) {
-      const existingBgData = existingElement.getAttribute("data-cover-id") ?? null;
-
-      if (existingBgData === currentImgCover) {
-        return;
-      }
-      const kawarpInstance = KawarpMap.get(
-        tag ?
-          tag :
-          existingElement
-      )
-
-      if (kawarpInstance) {
-        existingElement.setAttribute("data-cover-id", currentImgCover ?? "");
-        await kawarpInstance.loadImage(currentImgCover);
-        kawarpInstance.start();
-        return;
-      }
-    }
-
-    const canvas = document.createElement("canvas");
-    canvas.classList.add("spicy-dynamic-bg");
-    canvas.setAttribute("data-cover-id", currentImgCover ?? "");
-
-    const kawarpInstance = new Kawarp(canvas, KawarpOptionsStatic)
-    KawarpMap.set(
-      tag ?
-        tag :
-        canvas,
-      kawarpInstance
-    )
-    element.appendChild(canvas);
-    await kawarpInstance.loadImage(currentImgCover);
-    kawarpInstance.start();
-    const msDelay = KawarpOptionsStatic.transitionDuration * 2;
-
-    if (opts?.doTransitionDurationAppendWithPromise) {
-      await new Promise(r => setTimeout(r, msDelay));
-      kawarpInstance?.setOptions({ transitionDuration: KawarpTransitionDuration });
-    } else {
-      setTimeout(() => {
-        kawarpInstance?.setOptions({ transitionDuration: KawarpTransitionDuration });
-      }, msDelay);
-    }
+    setTimeout(() => {
+      void background.setTransitionDuration(KawarpTransitionDuration);
+    }, msDelay);
   }
 }
 
 export async function GetStaticBackground(
-  TrackArtist: string | undefined,
-  TrackId: string | undefined
+  trackArtist: string | undefined,
+  trackId: string | undefined
 ): Promise<string | undefined> {
-  if (!TrackArtist || !TrackId) return undefined;
+  if (!trackArtist || !trackId) return undefined;
 
   try {
-    return await ArtistVisuals.ApplyContent(TrackArtist, TrackId);
+    return await ArtistVisuals.ApplyContent(trackArtist, trackId);
   } catch (error) {
     dynamicBgLogger.error("Error setting static low quality dynamic background", error);
     return undefined;
   }
 }
 
-let staticColorBgTransitionTimeout = null;
+let staticColorBgTransitionTimeout: ReturnType<typeof setTimeout> | null = null;
 
 const getColorBackgroundElement = (): HTMLElement | null => {
   if (cachedColorBackgroundEl?.isConnected) {
     return cachedColorBackgroundEl;
   }
-  const el = PageContainer?.querySelector<HTMLElement>(".spicy-dynamic-bg.ColorBackground") ?? null;
-  cachedColorBackgroundEl = el;
-  return el;
+  const element =
+    PageContainer?.querySelector<HTMLElement>(".spicy-dynamic-bg.ColorBackground") ?? null;
+  cachedColorBackgroundEl = element;
+  return element;
 };
 
 Global.Event.listen("playback:songchange", () => {
@@ -223,15 +296,18 @@ Global.Event.listen("playback:songchange", () => {
 
     staticColorBgTransitionTimeout = setTimeout(() => {
       const contentBox = PageContainer.querySelector<HTMLElement>(".ContentBox");
-      if (contentBox) ApplyDynamicBackground(contentBox);
+      if (contentBox) {
+        void ApplyDynamicBackground(contentBox);
+      }
 
-      clearTimeout(staticColorBgTransitionTimeout);
-      staticColorBgTransitionTimeout = null;
+      if (staticColorBgTransitionTimeout) {
+        clearTimeout(staticColorBgTransitionTimeout);
+        staticColorBgTransitionTimeout = null;
+      }
     }, 1000);
   }
-})
+});
 
-/** Successful analysis, or `null` once we know the track has no analysis (stops progress-handler spam). */
 const audioAnalysisCache = new Map<string, AudioAnalysisData | null>();
 const audioAnalysisInflightRequests = new Map<string, Promise<AudioAnalysisData | null>>();
 let latestPlaybackTrackId: string | null = null;
@@ -244,9 +320,9 @@ const pruneAudioAnalysisCache = (activeTrackId: string) => {
   }
 };
 
-const getAudioAnalysisForTrack = async (trackId: string): Promise<AudioAnalysisData | null> => {
+const fetchAudioAnalysisForTrack = async (trackId: string): Promise<AudioAnalysisData | null> => {
   if (audioAnalysisCache.has(trackId)) {
-    return audioAnalysisCache.get(trackId)!;
+    return audioAnalysisCache.get(trackId) ?? null;
   }
 
   const inflight = audioAnalysisInflightRequests.get(trackId);
@@ -267,83 +343,92 @@ const getAudioAnalysisForTrack = async (trackId: string): Promise<AudioAnalysisD
   return request;
 };
 
-const setDynamicBackgroundAnimationSpeed = (speed: number) => {
-  KawarpMap.forEach((kawarpInstance) => {
-    void kawarpInstance.setOptions({
-      animationSpeed: speed
-    })
-  })
+const queueAudioAnalysisPrefetch = (trackId: string | null | undefined) => {
+  if (!trackId || audioAnalysisCache.has(trackId) || audioAnalysisInflightRequests.has(trackId)) {
+    return;
+  }
+
+  void fetchAudioAnalysisForTrack(trackId).catch((error) => {
+    dynamicBgLogger.warn("Failed to prefetch audio analysis", error);
+  });
 };
 
-const resetDynamicBackgroundAnimationSpeed = () => {
-  setDynamicBackgroundAnimationSpeed(1);
-};
+function getBackgroundAudioSnapshot(): BackgroundAudioSnapshot {
+  const trackId = SpotifyPlayer.GetId() ?? null;
+  if (trackId) {
+    latestPlaybackTrackId = trackId;
+    pruneAudioAnalysisCache(trackId);
+    queueAudioAnalysisPrefetch(trackId);
+  }
+
+  const analysis = trackId ? (audioAnalysisCache.get(trackId) ?? null) : null;
+  const isPlaying = Spicetify.Player.isPlaying();
+  const currentTimeMs = SpotifyPlayer.GetPosition();
+  const baseAnimationSpeed = getBaseAnimationSpeed(trackId, currentTimeMs, analysis, isPlaying);
+
+  try {
+    return {
+      ...audioEngine.getSnapshot(trackId, currentTimeMs, analysis, isPlaying),
+      baseAnimationSpeed,
+    };
+  } catch (error) {
+    dynamicBgLogger.warn("Background audio snapshot failed", error);
+    return {
+      ...DEFAULT_SNAPSHOT,
+      baseAnimationSpeed,
+      isPlaying,
+    };
+  }
+}
+
+function getBaseAnimationSpeed(
+  trackId: string | null,
+  currentTimeMs: number,
+  analysis: AudioAnalysisData | null,
+  isPlaying: boolean
+): number {
+  if (!isPlaying) {
+    return 0.1;
+  }
+
+  if (!trackId || !analysis) {
+    return 1;
+  }
+
+  try {
+    return animationController.getSpeedMultiplier(currentTimeMs / 1000, analysis);
+  } catch (error) {
+    dynamicBgLogger.warn("Background animation speed fallback triggered", error);
+    return 1;
+  }
+}
 
 Global.Event.listen("playback:songchange", () => {
-  latestPlaybackTrackId = SpotifyPlayer.GetId();
+  latestPlaybackTrackId = SpotifyPlayer.GetId() ?? null;
 
   if (latestPlaybackTrackId) {
     pruneAudioAnalysisCache(latestPlaybackTrackId);
+    queueAudioAnalysisPrefetch(latestPlaybackTrackId);
   } else {
     audioAnalysisCache.clear();
   }
 });
 
-const applyPlayPauseAnimationSpeed = (isPaused: boolean) => {
-  setDynamicBackgroundAnimationSpeed(isPaused ? 0.1 : 1);
-};
-
-Global.Event.listen("playback:playpause", (e: { data?: { isPaused?: boolean } }) => {
-  applyPlayPauseAnimationSpeed(!!e?.data?.isPaused);
+Global.Event.listen("playback:progress", () => {
+  const trackId = SpotifyPlayer.GetId();
+  if (trackId) {
+    queueAudioAnalysisPrefetch(trackId);
+  }
 });
 
-// TODO: Make this also remove the NPV dynamic bg when we switch to staticBackground mode, as that should be removed.
 const reapplyPageBackground = () => {
   const contentBox = PageContainer?.querySelector<HTMLElement>(".ContentBox");
   if (!contentBox) return;
-  const kawarp = KawarpMap.get("lpagebg");
-  if (kawarp) {
-    kawarp.dispose();
-    KawarpMap.delete("lpagebg");
-  }
-  contentBox.querySelectorAll<HTMLElement>(".spicy-dynamic-bg").forEach((el) => el.remove());
+
+  disposeDynamicBackground("lpagebg");
+  removeDynamicNodes(contentBox);
+  removeStaticNodes(contentBox);
   void ApplyDynamicBackground(contentBox, "lpagebg");
 };
 
 $staticBackgroundMode.listen(reapplyPageBackground);
-
-Global.Event.listen("playback:progress", async (e) => {
-  const songId = SpotifyPlayer.GetId();
-  if (!songId) {
-    resetDynamicBackgroundAnimationSpeed();
-    return;
-  }
-
-  latestPlaybackTrackId = songId;
-  const requestTrackId = songId;
-
-  const audioAnalysisData = await getAudioAnalysisForTrack(requestTrackId);
-  if (!audioAnalysisData) {
-    resetDynamicBackgroundAnimationSpeed();
-    return;
-  }
-
-  // Prevent stale async results from old tracks applying after rapid song switches.
-  const currentTrackId = SpotifyPlayer.GetId();
-  if (!currentTrackId || currentTrackId !== requestTrackId || latestPlaybackTrackId !== requestTrackId) {
-    return;
-  }
-
-  pruneAudioAnalysisCache(requestTrackId);
-
-  const currentTimeMs = SpotifyPlayer.GetPosition();
-  const currentTime = currentTimeMs / 1000;
-
-  const speedMultiplier = animSpeedController.getSpeedMultiplier(currentTime, audioAnalysisData);
-
-  KawarpMap.forEach((kawarpInstance) => {
-    void kawarpInstance.setOptions({
-      animationSpeed: speedMultiplier
-    })
-  })
-})

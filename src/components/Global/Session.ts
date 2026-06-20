@@ -18,7 +18,33 @@ type VersionParsedData =
     }
   | undefined;
 
+type BuildMetadata = {
+  LoadedVersion: string;
+  CompatibilityVersion: string;
+  UpstreamBaseVersion: string;
+  customBuild: boolean;
+  disableBlockingUpdateScreen: boolean;
+  preferLocalBuild: boolean;
+  source: string;
+};
+
 let sessionHistory: Location[] = [];
+
+function compareVersions(
+  left: Exclude<VersionParsedData, undefined>,
+  right: Exclude<VersionParsedData, undefined>
+): number {
+  if (left.Major !== right.Major) {
+    return left.Major > right.Major ? 1 : -1;
+  }
+  if (left.Minor !== right.Minor) {
+    return left.Minor > right.Minor ? 1 : -1;
+  }
+  if (left.Patch !== right.Patch) {
+    return left.Patch > right.Patch ? 1 : -1;
+  }
+  return 0;
+}
 
 const Session = {
   Navigate: (data: Location) => {
@@ -55,6 +81,22 @@ const Session = {
     sessionHistory.push(data);
   },
   SpicyLyrics: {
+    GetBuildMetadata: (): BuildMetadata => {
+      const metadata = window._spicy_lyrics_metadata ?? {};
+      const loadedVersion = metadata.LoadedVersion ?? $spicyLyricsVersion.get();
+      const compatibilityVersion = metadata.CompatibilityVersion ?? loadedVersion;
+      const upstreamBaseVersion = metadata.UpstreamBaseVersion ?? compatibilityVersion;
+
+      return {
+        LoadedVersion: loadedVersion,
+        CompatibilityVersion: compatibilityVersion,
+        UpstreamBaseVersion: upstreamBaseVersion,
+        customBuild: metadata.customBuild === true,
+        disableBlockingUpdateScreen: metadata.disableBlockingUpdateScreen === true,
+        preferLocalBuild: metadata.preferLocalBuild !== false,
+        source: metadata.source ?? "unknown",
+      };
+    },
     ParseVersion: (version: string): VersionParsedData => {
       const versionMatches = version.match(/(\d+)\.(\d+)\.(\d+)/);
 
@@ -70,19 +112,32 @@ const Session = {
         Patch: parseInt(versionMatches[3]),
       };
     },
+    CompareVersions: compareVersions,
+    GetCurrentDisplayVersion: (): string => {
+      return Session.SpicyLyrics.GetBuildMetadata().LoadedVersion;
+    },
+    GetCompatibilityVersionText: (): string => {
+      return Session.SpicyLyrics.GetBuildMetadata().CompatibilityVersion;
+    },
     GetCurrentVersion: (): VersionParsedData => {
-      return Session.SpicyLyrics.ParseVersion($spicyLyricsVersion.get());
+      return Session.SpicyLyrics.ParseVersion(Session.SpicyLyrics.GetCompatibilityVersionText());
     },
     GetLatestVersion: async (): Promise<VersionParsedData> => {
-      const res = await Query([
-        {
-          operation: "ext_version",
-        },
-      ]);
-      const versionJob = res.get("0");
-      if (!versionJob || versionJob.httpStatus !== 200 || versionJob.format !== "text") return undefined;
-      const data = versionJob.data;
-      return Session.SpicyLyrics.ParseVersion(data);
+      try {
+        const res = await Query([
+          {
+            operation: "ext_version",
+          },
+        ]);
+        const versionJob = res.get("0");
+        if (!versionJob || versionJob.httpStatus !== 200 || versionJob.format !== "text") {
+          return undefined;
+        }
+        const data = versionJob.data;
+        return Session.SpicyLyrics.ParseVersion(data);
+      } catch {
+        return undefined;
+      }
     },
     IsOutdated: async (): Promise<boolean> => {
       const latestVersion = await Session.SpicyLyrics.GetLatestVersion();
@@ -90,11 +145,7 @@ const Session = {
 
       if (latestVersion === undefined || currentVersion === undefined) return false;
 
-      return (
-        latestVersion.Major > currentVersion.Major ||
-        latestVersion.Minor > currentVersion.Minor ||
-        latestVersion.Patch > currentVersion.Patch
-      );
+      return Session.SpicyLyrics.CompareVersions(latestVersion, currentVersion) > 0;
     },
   },
 };

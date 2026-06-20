@@ -17,7 +17,9 @@ import {
   ResetLastLine,
 } from "../../utils/Scrolling/ScrollToActiveLine.ts";
 import { ScrollSimplebar } from "../../utils/Scrolling/Simplebar/ScrollSimplebar.ts";
-import ApplyDynamicBackground, { KawarpMap } from "../DynamicBG/dynamicBackground.ts";
+import ApplyDynamicBackground, {
+  disposeDynamicBackground,
+} from "../DynamicBG/dynamicBackground.ts";
 import {
   $currentLyricsData,
   $lyricsContainerExists,
@@ -31,11 +33,7 @@ import Global from "../Global/Global.ts";
 import Session from "../Global/Session.ts";
 import { SpotifyPlayer } from "../Global/SpotifyPlayer.ts";
 import { Icons } from "../Styling/Icons.ts";
-import {
-  DisableCompactMode,
-  EnableCompactMode,
-  IsCompactMode,
-} from "../Utils/CompactMode.ts";
+import { DisableCompactMode, EnableCompactMode, IsCompactMode } from "../Utils/CompactMode.ts";
 import Fullscreen, {
   EnterSpicyLyricsFullscreen,
   ExitFullscreenElement,
@@ -52,14 +50,14 @@ import {
   CloseSidebarLyrics,
   OpenSidebarLyrics,
   isSpicySidebarMode,
-  cleanupSidebarLyricsObservers
+  cleanupSidebarLyricsObservers,
 } from "../Utils/SidebarLyrics.ts";
 import TransferElement from "../Utils/TransferElement.ts";
 import { IsPIP, _IsPIP_after, ClosePopupLyrics } from "../Utils/PopupLyrics.ts";
 import { CleanUpIsByCommunity } from "../../utils/Lyrics/Applyer/Credits/ApplyIsByCommunity.tsx";
 import { OpenLyricsDBPanel } from "../../utils/openLyricsDBPanel.tsx";
 import { openSettingsPanel } from "../../utils/settings.ts";
-import Logger from "../../utils/logger.ts";
+import Logger from "../../utils/Logger.ts";
 import Whentil from "../../modules/Whentil.ts";
 import { triggerRemeasureLV } from "../../utils/Lyrics/LyricsVirtualizer.ts";
 
@@ -108,9 +106,7 @@ export const GetPageRoot = () =>
     );
     return child?.parentElement as HTMLElement | null;
   })() ??
-  document.querySelector<HTMLElement>(
-    ".Root__main-view .main-view-container .os-host"
-  ) ??
+  document.querySelector<HTMLElement>(".Root__main-view .main-view-container .os-host") ??
   document.querySelector<HTMLElement>(
     ".Root__main-view .main-view-container .uGZUPBPcDpzSYqKcQT8r > div"
   );
@@ -122,7 +118,6 @@ async function OpenPage(
   AppendTo: HTMLElement | undefined = undefined,
   isSidebarMode: boolean = false
 ) {
-
   if (_IsPIP_after) {
     await ClosePopupLyrics();
     // After closing, open again with the same arguments
@@ -181,12 +176,12 @@ async function OpenPage(
     `;
 
   if ($viewControlsPosition.get() === "Top") {
-    elem.classList.add("ViewControlsPosition_Top")
+    elem.classList.add("ViewControlsPosition_Top");
   } else if ($viewControlsPosition.get() === "Bottom") {
-    elem.classList.add("ViewControlsPosition_Bottom")
+    elem.classList.add("ViewControlsPosition_Bottom");
   }
 
-  /* 
+  /*
         <div class="SongMoreInfo">
             <div class="Content">
                 <div class="SongMetadata">
@@ -211,7 +206,6 @@ async function OpenPage(
         </div>
     */
 
-  
   PageContainer = elem;
 
   if (!$skipSpicyFont.get()) {
@@ -226,9 +220,7 @@ async function OpenPage(
     elem.classList.add("MinimalLyricsMode");
   }
 
-  const contentBox = elem.querySelector<HTMLElement>(
-    ".ContentBox"
-  );
+  const contentBox = elem.querySelector<HTMLElement>(".ContentBox");
   if (contentBox) {
     try {
       ApplyDynamicBackground(contentBox, "lpagebg");
@@ -308,8 +300,7 @@ async function OpenPage(
     UpdateSongMoreInfo();
 }) */
 
-export const isSizeReadyToBeCompacted = () =>
-  window.matchMedia("(max-width: 70.812rem)").matches;
+export const isSizeReadyToBeCompacted = () => window.matchMedia("(max-width: 70.812rem)").matches;
 
 export function Compactify(Element: HTMLElement | undefined = undefined) {
   if (!Fullscreen.IsOpen) return;
@@ -339,8 +330,7 @@ async function DestroyPage() {
   if (Fullscreen.IsOpen) await Fullscreen.Close();
   if (!PageContainer) return;
 
-  KawarpMap.get("lpagebg")?.dispose();
-  KawarpMap.delete("lpagebg");
+  disposeDynamicBackground("lpagebg");
   ResetLastLine();
   CleanupScrollEvents();
   PageResizeListener?.disconnect(); // Disconnect the observer
@@ -392,9 +382,7 @@ Global.Event.listen("lyrics:apply", ({ Type }: { Type: string }) => {
 function AppendViewControls(ReAppend: boolean = false) {
   if (!PageContainer) return;
   controlsLogger.debug("Append view controls");
-  const elem = PageContainer.querySelector<HTMLElement>(
-    ".ContentBox .ViewControls"
-  );
+  const elem = PageContainer.querySelector<HTMLElement>(".ContentBox .ViewControls");
   if (!elem) return;
 
   // Safely destroy existing tooltips first
@@ -407,60 +395,58 @@ function AppendViewControls(ReAppend: boolean = false) {
   });
 
   if (ReAppend) elem.innerHTML = "";
-  const isNoLyrics =
-    $currentLyricsData.get() === `NO_LYRICS:${SpotifyPlayer.GetId()}`;
+  const isNoLyrics = $currentLyricsData.get() === `NO_LYRICS:${SpotifyPlayer.GetId()}`;
   const isTTMLMakerMode = $ttmlMakerMode.get();
   elem.innerHTML = `
         ${
           Fullscreen.IsOpen || Fullscreen.CinemaViewOpen
             ? ""
-            : IsPIP ? "" : `<button id="CinemaView" class="ViewControl">${Icons.CinemaView}</button>`
+            : IsPIP
+              ? ""
+              : `<button id="CinemaView" class="ViewControl">${Icons.CinemaView}</button>`
         }
         ${
           Fullscreen.IsOpen || Fullscreen.CinemaViewOpen
-            ? IsPIP ? "" : `<button id="CompactModeToggle" class="ViewControl">${
-                IsCompactMode()
-                  ? Icons.DisableCompactModeIcon
-                  : Icons.EnableCompactModeIcon
-              }</button>`
+            ? IsPIP
+              ? ""
+              : `<button id="CompactModeToggle" class="ViewControl">${
+                  IsCompactMode() ? Icons.DisableCompactModeIcon : Icons.EnableCompactModeIcon
+                }</button>`
             : ""
         }
         <button id="RomanizationToggle" class="ViewControl">
-          ${
-            isRomanized
-              ? Icons.DisableRomanization
-              : Icons.EnableRomanization
-          }
+          ${isRomanized ? Icons.DisableRomanization : Icons.EnableRomanization}
         </button>
         ${
-          !Fullscreen.IsOpen &&
-          !Fullscreen.CinemaViewOpen &&
-          !isSpicySidebarMode
-            ? IsPIP ? "" : `<button id="NowBarToggle" class="ViewControl">${Icons.NowBar}</button>`
+          !Fullscreen.IsOpen && !Fullscreen.CinemaViewOpen && !isSpicySidebarMode
+            ? IsPIP
+              ? ""
+              : `<button id="NowBarToggle" class="ViewControl">${Icons.NowBar}</button>`
             : ""
         }
         ${
-          NowBarObj.Open &&
-          !isSpicySidebarMode
-            ? IsPIP ? "" : `<button id="NowBarSideToggle" class="ViewControl">${Icons.NowBarSideSwap}</button>`
+          NowBarObj.Open && !isSpicySidebarMode
+            ? IsPIP
+              ? ""
+              : `<button id="NowBarSideToggle" class="ViewControl">${Icons.NowBarSideSwap}</button>`
             : ""
         }
         ${
           Fullscreen.IsOpen
-            ? (IsPIP ? "" : `<button id="FullscreenToggle" class="ViewControl">${
-                Fullscreen.CinemaViewOpen
-                  ? Icons.Fullscreen
-                  : Icons.CloseFullscreen
-              }</button>`)
+            ? IsPIP
+              ? ""
+              : `<button id="FullscreenToggle" class="ViewControl">${
+                  Fullscreen.CinemaViewOpen ? Icons.Fullscreen : Icons.CloseFullscreen
+                }</button>`
             : ""
         }
         ${
           !Fullscreen.IsOpen && !Fullscreen.CinemaViewOpen && $isGlobalNav.get()
-            ? IsPIP ? "" : `<button id="SidebarModeToggle" class="ViewControl">${
-                isSpicySidebarMode
-                  ? Icons["panel-right-open"]
-                  : Icons["panel-right-close"]
-              }</button>`
+            ? IsPIP
+              ? ""
+              : `<button id="SidebarModeToggle" class="ViewControl">${
+                  isSpicySidebarMode ? Icons["panel-right-open"] : Icons["panel-right-close"]
+                }</button>`
             : ""
         }
         ${
@@ -479,8 +465,7 @@ function AppendViewControls(ReAppend: boolean = false) {
     );
     if (mediaContent) {
       TransferElement(elem, mediaContent);
-      const viewControls =
-        mediaContent.querySelector<HTMLElement>(".ViewControls");
+      const viewControls = mediaContent.querySelector<HTMLElement>(".ViewControls");
       if (viewControls) {
         targetElem = viewControls;
       }
@@ -488,9 +473,7 @@ function AppendViewControls(ReAppend: boolean = false) {
   } else {
     const contentBox = PageContainer?.querySelector<HTMLElement>(".ContentBox");
     if (
-      PageContainer?.querySelector<HTMLElement>(
-        ".ContentBox .NowBar .Header .ViewControls"
-      ) &&
+      PageContainer?.querySelector<HTMLElement>(".ContentBox .NowBar .Header .ViewControls") &&
       contentBox
     ) {
       TransferElement(elem, contentBox);
@@ -543,9 +526,7 @@ function AppendViewControls(ReAppend: boolean = false) {
         if (!isPip) {
           Tooltips.Close = Spicetify.Tippy(compactModeToggle, {
             ...Spicetify.TippyProps,
-            content: `${
-              IsCompactMode() ? "Disable Compact Mode" : "Enable Compact Mode"
-            }`,
+            content: `${IsCompactMode() ? "Disable Compact Mode" : "Enable Compact Mode"}`,
           });
         }
         compactModeToggle.addEventListener("click", () => {
@@ -584,9 +565,9 @@ function AppendViewControls(ReAppend: boolean = false) {
         romanizationToggle.addEventListener("click", async () => {
           const songUri = SpotifyPlayer.GetUri();
           if (!songUri) return;
-          PageContainer?.querySelector(
-            ".LyricsContainer .LyricsContent"
-          )?.classList.add("HiddenTransitioned");
+          PageContainer?.querySelector(".LyricsContainer .LyricsContent")?.classList.add(
+            "HiddenTransitioned"
+          );
           const lyrics = await fetchLyrics(songUri);
 
           setRomanizedStatus(!isRomanized);
@@ -595,9 +576,9 @@ function AppendViewControls(ReAppend: boolean = false) {
 
           setTimeout(() => {
             AppendViewControls();
-            PageContainer?.querySelector(
-              ".LyricsContainer .LyricsContent"
-            )?.classList.remove("HiddenTransitioned");
+            PageContainer?.querySelector(".LyricsContainer .LyricsContent")?.classList.remove(
+              "HiddenTransitioned"
+            );
           }, 45);
         });
       } catch (err) {
@@ -627,9 +608,7 @@ function AppendViewControls(ReAppend: boolean = false) {
           if (!isPip) {
             Tooltips.NowBarToggle = Spicetify.Tippy(sidebarModeToggle, {
               ...Spicetify.TippyProps,
-              content: isSpicySidebarMode
-                ? `Switch to normal mode`
-                : `Switch to Sidebar Mode`,
+              content: isSpicySidebarMode ? `Switch to normal mode` : `Switch to Sidebar Mode`,
             });
           }
           sidebarModeToggle.addEventListener("click", () => {
@@ -672,9 +651,7 @@ function AppendViewControls(ReAppend: boolean = false) {
         if (!isPip) {
           Tooltips.FullscreenToggle = Spicetify.Tippy(fullscreenBtn, {
             ...Spicetify.TippyProps,
-            content: `${
-              Fullscreen.CinemaViewOpen ? "Fullscreen" : "Cinema View"
-            }`,
+            content: `${Fullscreen.CinemaViewOpen ? "Fullscreen" : "Cinema View"}`,
           });
         }
         fullscreenBtn.addEventListener("click", async () => {
@@ -777,7 +754,7 @@ function AppendViewControls(ReAppend: boolean = false) {
           if (IsPIP) {
             globalThis.focus();
           }
-          
+
           OpenLyricsDBPanel();
         });
       } catch (err) {
@@ -820,6 +797,6 @@ $viewControlsPosition.listen((v) => {
 $ttmlMakerMode.listen((v) => {
   if (!PageContainer) return;
   AppendViewControls(true);
-})
+});
 
 export default PageView;

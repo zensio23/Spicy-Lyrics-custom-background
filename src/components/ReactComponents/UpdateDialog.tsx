@@ -3,13 +3,18 @@ import React from "react";
 interface UpdateDialogProps {
   fromVersion: string;
   spicyLyricsVersion: string;
+  releaseVersion: string;
 }
 
-const UpdateDialog: React.FC<UpdateDialogProps> = ({ fromVersion, spicyLyricsVersion }) => {
+const UpdateDialog: React.FC<UpdateDialogProps> = ({
+  fromVersion,
+  spicyLyricsVersion,
+  releaseVersion,
+}) => {
   return (
     <div className="update-card-wrapper">
       <h2 className="uc-title">Spicy Lyrics updated!</h2>
-      <p className="uc-subtitle">You're running the latest version.</p>
+      <p className="uc-subtitle">You're running the local custom build.</p>
 
       <div className="uc-divider" />
 
@@ -25,7 +30,7 @@ const UpdateDialog: React.FC<UpdateDialogProps> = ({ fromVersion, spicyLyricsVer
         className="btn-primary"
         onClick={() =>
           window.open(
-            `https://github.com/Spikerko/spicy-lyrics/releases/tag/${spicyLyricsVersion}`,
+            `https://github.com/Spikerko/spicy-lyrics/releases/tag/${releaseVersion}`,
             "_blank"
           )
         }

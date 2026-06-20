@@ -5,7 +5,7 @@ import { SpotifyPlayer } from "../../components/Global/SpotifyPlayer.ts";
 import PageView, { PageContainer } from "../../components/Pages/PageView.ts";
 import { Query } from "../API/Query.ts";
 import { ProcessLyrics } from "./ProcessLyrics.ts";
-import Logger from "../logger.ts";
+import Logger from "../Logger.ts";
 import { LocalLyricsManager } from "./manager/index.ts";
 import { GetExpireStore } from "../../modules/Store.ts";
 import { SLObjPack } from "../objpack.ts";
@@ -19,6 +19,25 @@ export const LyricsStore = GetExpireStore<any>("SpicyLyrics_LyricsStore", 13, {
 }, isDev as true);
 
 const lyricsPacker = new SLObjPack();
+
+function isUpdateRequiredStaticPayload(lyrics: unknown): boolean {
+  if (!lyrics || typeof lyrics !== "object") return false;
+
+  const parsed = lyrics as {
+    Type?: unknown;
+    Lines?: Array<{ Text?: unknown }>;
+  };
+
+  if (parsed.Type !== "Static" || !Array.isArray(parsed.Lines)) {
+    return false;
+  }
+
+  const combinedText = parsed.Lines.map((line) => String(line?.Text ?? "")).join(" ").toLowerCase();
+  return (
+    combinedText.includes("please update spicy lyrics") ||
+    (combinedText.includes("restart spotify") && combinedText.includes("update"))
+  );
+}
 
 function setRomanizationClass(hasTransliterations: boolean | undefined): void {
   if (hasTransliterations) {
@@ -205,6 +224,16 @@ export default async function fetchLyrics(uri: string): Promise<[object | string
     status = lyricsQuery.httpStatus;
 
     if (status !== 200) {
+      if (status === 412 || status === 426) {
+        HideLoaderContainer();
+        $currentlyFetching.set(false);
+        void import("../version/CheckForUpdates.tsx").then((module) => {
+          module.showCustomBuildRefreshNotice(
+            "A local custom build refresh is available. Restarting Spotify alone will not update this branch."
+          );
+        });
+        return ["update-required", status];
+      }
       if (status === 404) {
         HideLoaderContainer();
         $currentlyFetching.set(false);
@@ -223,6 +252,18 @@ export default async function fetchLyrics(uri: string): Promise<[object | string
       return ["lyrics-not-found", 404];
     }
 
+    if (isUpdateRequiredStaticPayload(lyrics)) {
+      lyricsLogger.warn("Intercepted blocking update payload in lyrics response");
+      HideLoaderContainer();
+      $currentlyFetching.set(false);
+      void import("../version/CheckForUpdates.tsx").then((module) => {
+        module.showCustomBuildRefreshNotice(
+          "Upstream requested a newer build. Use the small update workflow instead of restarting Spotify."
+        );
+      });
+      return ["update-required", 426];
+    }
+
     await ProcessLyrics(lyrics);
 
     $currentLyricsData.set(JSON.stringify(lyrics));
@@ -236,7 +277,7 @@ export default async function fetchLyrics(uri: string): Promise<[object | string
     }
 
     presentLyrics(lyrics);
-    return [{ ...lyrics, fromCache: false }, 200];
+    return [{ ...(lyrics as Record<string, any>), fromCache: false }, 200];
   } catch (error) {
     lyricsLogger.error("Error fetching lyrics", error);
     $currentlyFetching.set(false);

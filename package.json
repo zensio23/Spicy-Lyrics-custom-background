@@ -5,9 +5,13 @@
     "sc": "spicetify-creator",
     "dev": "spicetify-creator dev",
     "build": "spicetify-creator build",
-    "lint": "oxlint",
-    "lint:fix": "oxlint --fix",
-    "fmt": "oxfmt"
+    "lint": "oxlint . --disable-nested-config --ignore-pattern release/**",
+    "lint:fix": "oxlint . --disable-nested-config --ignore-pattern release/** --fix",
+    "fmt": "oxfmt",
+    "upstream:check": "bun scripts/check-upstream.mjs",
+    "upstream:export-patch": "bun scripts/export-custom-layer.mjs",
+    "upstream:apply": "bun scripts/apply-custom-layer.mjs",
+    "upstream:update": "bun scripts/update-from-upstream.mjs"
   },
   "dependencies": {
     "@kawarp/core": "^1.2.0",
