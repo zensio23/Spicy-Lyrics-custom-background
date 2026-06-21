@@ -2,15 +2,19 @@
 
 ## Reporting a Vulnerability
 
-If you discover a security issue affecting this project, please report it responsibly.
+If you discover a security vulnerability affecting this project, please report it responsibly.
 
-### Preferred Method: GitHub Security Advisory
+### Preferred Method: GitHub Private Vulnerability Reporting
 
-Use GitHub's private vulnerability reporting feature whenever possible.
+If available, please use GitHub's private vulnerability reporting feature to report security issues confidentially.
 
-### Alternative: GitHub Issue
+### Alternative Contact Methods
 
-For non-sensitive security concerns, you may open a GitHub issue.
+If GitHub Private Vulnerability Reporting is unavailable or unsuitable, you may contact the maintainer directly:
+
+**Email:** [zensio023@gmail.com](mailto:zensio023@gmail.com)
+
+**Discord:** daniel_the_g
 
 Please do **not** publicly disclose serious vulnerabilities before they have been reviewed.
 
@@ -21,11 +25,12 @@ Please do **not** publicly disclose serious vulnerabilities before they have bee
 This repository contains the source code for:
 
 * Spicy Lyrics Custom Background
-* Custom visualizer features
-* Audio-reactive background effects
-* Preset management and customization features
+* Audio-reactive visualizer features
+* Dynamic background effects
+* Preset management and customization systems
+* Installation and update tooling included in this repository
 
-Reports related to vulnerabilities within this repository are considered in scope.
+Security reports related to vulnerabilities within this repository are considered in scope.
 
 ---
 
@@ -37,14 +42,15 @@ When reporting a vulnerability, please include:
 * Steps to reproduce
 * Expected behavior
 * Actual behavior
+* Potential impact
 * Screenshots, logs, or proof-of-concept examples if available
 
 ---
 
 ## Disclosure Policy
 
-Security reports will be reviewed as soon as possible.
+Security reports will be reviewed as soon as reasonably possible.
 
-Please allow reasonable time for investigation and remediation before publicly disclosing any security-related issue.
+Please allow sufficient time for investigation and remediation before publicly disclosing any security-related issue.
 
 Thank you for helping improve the security and stability of this project.
