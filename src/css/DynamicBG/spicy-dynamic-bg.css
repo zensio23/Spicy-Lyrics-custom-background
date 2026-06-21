@@ -54,11 +54,11 @@ aside .spicy-dynamic-bg {
 
 .spicy-dynamic-bg-lights {
   mix-blend-mode: screen;
-  opacity: 0.62;
+  opacity: 0.74;
 }
 
 .spicy-dynamic-bg-stars {
-  opacity: 0.86;
+  opacity: 0.92;
   mix-blend-mode: screen;
 }
 

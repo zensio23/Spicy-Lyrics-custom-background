@@ -1,4 +1,5 @@
 import { useStore } from "@nanostores/react";
+import { useState } from "react";
 import { toast } from "sonner";
 import {
   $activeCustomVisualizerPresetId,
@@ -109,7 +110,6 @@ const copy = {
       setup: "Starting point",
       motion: "Wave motion",
       glow: "Wave glow",
-      advanced: "Advanced tuning",
       stars: "Star layer",
     },
     staticBackground: {
@@ -129,15 +129,16 @@ const copy = {
         custom:
           "Keeps your manual tuning exactly as it is. Pick another preset anytime to snap back to a clean starting point.",
         vanilla: "Exactly the stock Spicy Lyrics look. No added glow, stars, or extra energy.",
-        smooth: "Dark, calm, and slow with a gentle wave glow.",
-        cinematic: "Best balanced default. Deep contrast, smooth motion, and clean cover-color glow.",
-        energetic: "Wave-focused reaction for upbeat music, with controlled drops and no star layer.",
+        smooth: "Calm and slow with a clearly visible but gentle wave glow.",
+        cinematic:
+          "Best balanced default. Deep contrast, smooth motion, and visible cover-color glow.",
+        energetic: "Stronger local wave reactions, punchier drops, and controlled faster motion.",
         insane:
           "Maximum impact with strong color-driven glow, capped to avoid flat white flashing.",
         eventually:
           "Dreamy, psychedelic motion with soft flowing waves and magical vocal-focused stars.",
         strokesSnowStrippers:
-          "Sharper pulses, more sparkle, and a faster party response without simply turning brighter.",
+          "Sharper pulses, more sparkle, and a lively party response without messy washout.",
       },
       options: {
         vanilla: "Vanilla",
@@ -160,8 +161,9 @@ const copy = {
       rename: "Rename",
       reset: "Reset",
       delete: "Delete",
-      export: "Export",
-      import: "Import",
+      export: "Copy JSON",
+      download: "Download JSON",
+      import: "Import Presets",
       prefix: "Custom",
       manualOnly: "Manual settings",
       namePrompt: "Preset name",
@@ -170,8 +172,18 @@ const copy = {
       deleteConfirm: "Delete this custom preset?",
       duplicatePrefix: "Copy of",
       selectedSuffix: "is selected.",
-      copied: "Custom presets copied to clipboard.",
-      imported: "custom preset(s) imported.",
+      copied: "Presets exported to clipboard.",
+      downloaded: "Preset JSON downloaded.",
+      importedOne: "Imported 1 preset.",
+      importedMany: "presets imported.",
+      invalid: "Invalid preset JSON.",
+      clipboardFailed: "Clipboard access failed, please paste manually.",
+      pasteTitle: "Import presets",
+      pasteDescription:
+        "Paste JSON exported from Spicy Lyrics. The importer keeps existing presets and creates new IDs for conflicts.",
+      pastePlaceholder: '{\n  "version": 1,\n  "presets": []\n}',
+      pasteAction: "Import JSON",
+      cancel: "Cancel",
       saved: "Custom preset saved.",
       updated: "Custom preset updated.",
       renamed: "Custom preset renamed.",
@@ -207,17 +219,17 @@ const copy = {
     brightness: {
       label: "Music Brightness",
       description:
-        "Advanced brightness trim after the glow shape is right. Lower it to preserve dark areas. Raise it only if lit waves still feel too dim.",
+        "Fine-tunes brightness after the glow shape is right. Lower it to preserve dark areas. Raise it if lit waves still feel too dim.",
     },
     impact: {
       label: "Impact Strength",
       description:
-        "Controls how many wave regions participate during musical hits. This adds drama without changing base movement speed.",
+        "Controls how many wave regions activate and how strongly they participate during louder moments. It should add drama without flattening contrast.",
     },
     loudness: {
-      label: "Quiet Section Protection",
+      label: "Quiet/Loud Detection",
       description:
-        "Controls how easily quiet sounds can trigger larger reactions. Higher values protect calm sections; lower values let smaller details react sooner.",
+        "Sets how selective the effect is about real song loudness. Negative values reserve strong glow for louder moments. Positive values let medium sections react sooner.",
     },
     calmIntensity: {
       label: "Calm Section Intensity",
@@ -227,12 +239,12 @@ const copy = {
     loudIntensity: {
       label: "Loud Section Intensity",
       description:
-        "Controls how much extra glow loud sections can add. Movement stays controlled by the movement sliders.",
+        "Controls how far choruses and drops can open up. Higher values make more regions glow strongly while still using cover colors.",
     },
     glowLimit: {
-      label: "Brightness Cap",
+      label: "Global Brightness Limit",
       description:
-        "Hard cap for the total light added by glowing regions. Lower it if choruses wash out. Raise it only when you want louder sections to fill more of the field.",
+        "Caps the total light added by all glowing regions. Lower it if choruses wash out. Raise it only when you want louder sections to fill more of the field.",
     },
     response: {
       label: "Smoothing / Response",
@@ -270,12 +282,12 @@ const copy = {
     starAmount: {
       label: "Star Amount",
       description:
-        "Adjust how many stars are visible when the layer is enabled. This changes scene density, with internal caps to protect readability.",
+        "Adjust how many stars are visible when the layer is enabled. This changes scene density, not vocal sensitivity.",
     },
     starBrightness: {
       label: "Star Brightness",
       description:
-        "Main control for visible twinkle strength. Increase this before adding more stars if you want more sparkle without clutter.",
+        "Main control for visible twinkle strength. Increase this before adding more stars if you want more sparkle.",
     },
     starSize: {
       label: "Star Size",
@@ -340,7 +352,6 @@ const copy = {
       setup: "Startpunkt",
       motion: "Wellenbewegung",
       glow: "Wellen-Glow",
-      advanced: "Erweiterte Abstimmung",
       stars: "Sternebene",
     },
     staticBackground: {
@@ -362,17 +373,17 @@ const copy = {
           "Behaelt deine manuelle Abstimmung unveraendert bei. Du kannst jederzeit ein anderes Preset waehlen, um auf einen klaren Ausgangspunkt zurueckzugehen.",
         vanilla:
           "Genau der originale Spicy-Lyrics-Look. Kein zusaetzlicher Glow, keine Sterne und keine Extra-Energie.",
-        smooth: "Dunkel, ruhig und langsam mit einem sanften Wellen-Glow.",
+        smooth: "Ruhig und langsam mit einem klar sichtbaren, aber sanften Wellen-Glow.",
         cinematic:
-          "Der beste Standard. Tiefer Kontrast, ruhige Bewegung und sauberer Coverfarben-Glow.",
+          "Der beste Standard. Tiefer Kontrast, ruhige Bewegung und sichtbarer Coverfarben-Glow.",
         energetic:
-          "Wellenfokussierte Reaktion fuer schnellere Musik, mit kontrollierten Drops und ohne Sternebene.",
+          "Staerkere lokale Wellenreaktionen, markantere Drops und kontrolliert schnellere Bewegung.",
         insane:
           "Maximaler Impact mit starkem farbbasiertem Glow, aber begrenzt gegen flaches weisses Blitzen.",
         eventually:
           "Traeumerische, psychedelische Bewegung mit weichen Wellen und magischen, vocal-fokussierten Sternen.",
         strokesSnowStrippers:
-          "Schaerfere Pulse, mehr Funkeln und eine schnellere Party-Reaktion, ohne einfach heller zu werden.",
+          "Schaerfere Pulse, mehr Funkeln und eine schnellere, partyartige Reaktion.",
       },
       options: {
         vanilla: "Vanilla",
@@ -395,8 +406,9 @@ const copy = {
       rename: "Umbenennen",
       reset: "Zuruecksetzen",
       delete: "Loeschen",
-      export: "Export",
-      import: "Import",
+      export: "JSON kopieren",
+      download: "JSON herunterladen",
+      import: "Presets importieren",
       prefix: "Eigen",
       manualOnly: "Manuelle Werte",
       namePrompt: "Preset-Name",
@@ -405,8 +417,18 @@ const copy = {
       deleteConfirm: "Dieses eigene Preset loeschen?",
       duplicatePrefix: "Kopie von",
       selectedSuffix: "ist ausgewaehlt.",
-      copied: "Eigene Presets wurden in die Zwischenablage kopiert.",
-      imported: "eigene(s) Preset(s) importiert.",
+      copied: "Presets wurden in die Zwischenablage exportiert.",
+      downloaded: "Preset-JSON wurde heruntergeladen.",
+      importedOne: "1 Preset importiert.",
+      importedMany: "Presets importiert.",
+      invalid: "Ungueltiges Preset-JSON.",
+      clipboardFailed: "Zwischenablage konnte nicht gelesen werden. Bitte manuell einfuegen.",
+      pasteTitle: "Presets importieren",
+      pasteDescription:
+        "Fuege JSON ein, das aus Spicy Lyrics exportiert wurde. Bestehende Presets bleiben erhalten; bei ID-Konflikten werden neue IDs erzeugt.",
+      pastePlaceholder: '{\n  "version": 1,\n  "presets": []\n}',
+      pasteAction: "JSON importieren",
+      cancel: "Abbrechen",
       saved: "Eigenes Preset gespeichert.",
       updated: "Eigenes Preset aktualisiert.",
       renamed: "Eigenes Preset umbenannt.",
@@ -442,17 +464,17 @@ const copy = {
     brightness: {
       label: "Musik-Helligkeit",
       description:
-        "Erweiterte Helligkeits-Feinabstimmung, nachdem die Glow-Form passt. Senke sie fuer dunklere Bereiche. Erhoehe sie nur, wenn beleuchtete Wellen zu dunkel wirken.",
+        "Feinabstimmung der Helligkeit, nachdem die Glow-Form passt. Senke sie fuer dunklere Bereiche. Erhoehe sie, wenn beleuchtete Wellen zu dunkel wirken.",
     },
     impact: {
       label: "Impact-Staerke",
       description:
-        "Steuert, wie viele Wellenregionen bei musikalischen Hits teilnehmen. Das bringt Drama, ohne die Grundbewegung zu veraendern.",
+        "Steuert, wie viele Wellenregionen bei lauten Momenten aktiv werden und wie stark sie teilnehmen. Das bringt Drama, ohne den Kontrast flach zu machen.",
     },
     loudness: {
-      label: "Schutz ruhiger Stellen",
+      label: "Leise/Laut-Erkennung",
       description:
-        "Steuert, wie leicht leise Sounds groessere Reaktionen ausloesen. Hoehere Werte schuetzen ruhige Stellen; niedrigere Werte lassen kleine Details frueher reagieren.",
+        "Legt fest, wie selektiv der Effekt echte Song-Lautheit bewertet. Negative Werte reservieren starken Glow fuer laute Momente. Positive Werte lassen mittlere Stellen frueher reagieren.",
     },
     calmIntensity: {
       label: "Intensitaet ruhiger Stellen",
@@ -462,12 +484,12 @@ const copy = {
     loudIntensity: {
       label: "Intensitaet lauter Stellen",
       description:
-        "Steuert, wie viel Extra-Glow laute Stellen addieren duerfen. Bewegung bleibt bei den Bewegungs-Slidern.",
+        "Steuert, wie weit Refrains und Drops aufgehen duerfen. Hoehere Werte lassen mehr Regionen stark leuchten, weiterhin mit Coverfarben.",
     },
     glowLimit: {
-      label: "Helligkeitslimit",
+      label: "Globales Helligkeitslimit",
       description:
-        "Harte Grenze fuer das gesamte Licht aller leuchtenden Regionen. Senke sie, wenn Refrains ausbleichen. Erhoehe sie nur, wenn laute Stellen mehr Feld fuellen sollen.",
+        "Begrenzt das gesamte Licht aller leuchtenden Regionen. Senke es, wenn Refrains ausbleichen. Erhoehe es nur, wenn laute Stellen mehr Feld fuellen sollen.",
     },
     response: {
       label: "Glaettung / Reaktion",
@@ -505,12 +527,12 @@ const copy = {
     starAmount: {
       label: "Sternanzahl",
       description:
-        "Bestimmt, wie viele Sterne sichtbar sind, wenn die Ebene aktiv ist. Das veraendert die Szenen-Dichte, mit internen Grenzen fuer Lesbarkeit.",
+        "Bestimmt, wie viele Sterne sichtbar sind, wenn die Ebene aktiv ist. Das veraendert die Szenen-Dichte, nicht die Vocal-Empfindlichkeit.",
     },
     starBrightness: {
       label: "Sternhelligkeit",
       description:
-        "Die Hauptsteuerung fuer sichtbare Twinkle-Staerke. Erhoehe das zuerst, bevor du mehr Sterne hinzufuegst, wenn du mehr Funkeln ohne Unruhe willst.",
+        "Die Hauptsteuerung fuer sichtbare Twinkle-Staerke. Erhoehe das zuerst, bevor du mehr Sterne hinzufuegst, wenn du mehr Funkeln willst.",
     },
     starSize: {
       label: "Sterngroesse",
@@ -547,10 +569,7 @@ function formatSignedValue(
   return `${value < 0 ? labels.negative : labels.positive} | ${signed}`;
 }
 
-function formatPercentValue(
-  value: number,
-  labels: { low: string; medium: string; high: string }
-) {
+function formatPercentValue(value: number, labels: { low: string; medium: string; high: string }) {
   const descriptor = value <= 33 ? labels.low : value >= 67 ? labels.high : labels.medium;
   return `${descriptor} | ${value}%`;
 }
@@ -582,6 +601,8 @@ export default function BackgroundSection({ query, sectionFilter }: Props) {
   const starTwinkleSpeed = useStore($starTwinkleSpeed);
   const starVocalSensitivity = useStore($starVocalSensitivity);
   const starBeatSensitivity = useStore($starBeatSensitivity);
+  const [presetImportOpen, setPresetImportOpen] = useState(false);
+  const [presetImportDraft, setPresetImportDraft] = useState("");
 
   if (sectionFilter !== "All" && sectionFilter !== SECTION_NAME) return null;
 
@@ -606,7 +627,9 @@ export default function BackgroundSection({ query, sectionFilter }: Props) {
       : "high"
   ) as "low" | "medium" | "high";
   const performanceDescription = `${text.performance.description} ${text.performance.notes[performanceKey]}`;
-  const starShapeKey = (starShapeOptions.includes(starShape) ? starShape : "mixed") as keyof typeof text.starShape.notes;
+  const starShapeKey = (
+    starShapeOptions.includes(starShape) ? starShape : "mixed"
+  ) as keyof typeof text.starShape.notes;
   const starShapeDescription = `${text.starShape.description} ${text.starShape.notes[starShapeKey]}`;
   const setupVisible =
     rowVisible(text.staticBackground.label, text.staticBackground.description) ||
@@ -617,18 +640,17 @@ export default function BackgroundSection({ query, sectionFilter }: Props) {
     rowVisible(text.language.label, text.language.description);
   const motionVisible =
     rowVisible(text.movement.label, text.movement.description) ||
-    rowVisible(text.beatdrop.label, text.beatdrop.description);
+    rowVisible(text.beatdrop.label, text.beatdrop.description) ||
+    rowVisible(text.response.label, text.response.description);
   const glowVisible =
     rowVisible(text.waveGlow.label, text.waveGlow.description) ||
-    rowVisible(text.impact.label, text.impact.description) ||
-    rowVisible(text.glowLimit.label, text.glowLimit.description);
-  const advancedVisible =
     rowVisible(text.localVariation.label, text.localVariation.description) ||
     rowVisible(text.brightness.label, text.brightness.description) ||
+    rowVisible(text.impact.label, text.impact.description) ||
     rowVisible(text.calmIntensity.label, text.calmIntensity.description) ||
     rowVisible(text.loudIntensity.label, text.loudIntensity.description) ||
     rowVisible(text.loudness.label, text.loudness.description) ||
-    rowVisible(text.response.label, text.response.description);
+    rowVisible(text.glowLimit.label, text.glowLimit.description);
   const starsVisible =
     rowVisible(text.starsEnabled.label, text.starsEnabled.description) ||
     (showStarDetails &&
@@ -639,7 +661,7 @@ export default function BackgroundSection({ query, sectionFilter }: Props) {
         rowVisible(text.starTwinkle.label, text.starTwinkle.description) ||
         rowVisible(text.starVocalSensitivity.label, text.starVocalSensitivity.description) ||
         rowVisible(text.starBeatSensitivity.label, text.starBeatSensitivity.description)));
-  const hasVisibleRow = setupVisible || motionVisible || glowVisible || advancedVisible || starsVisible;
+  const hasVisibleRow = setupVisible || motionVisible || glowVisible || starsVisible;
 
   if (!hasVisibleRow) return null;
 
@@ -671,7 +693,9 @@ export default function BackgroundSection({ query, sectionFilter }: Props) {
     ...customPresets.map((preset) => `${text.customPresets.prefix}: ${preset.name}`),
     text.preset.options.custom,
   ];
-  const selectedPresetValue = selectedCustomPreset ? `custom:${selectedCustomPreset.id}` : visualizerPreset;
+  const selectedPresetValue = selectedCustomPreset
+    ? `custom:${selectedCustomPreset.id}`
+    : visualizerPreset;
   const starDisabledReason = dynamicDisabled ? text.disabledReason : text.starsDisabledReason;
 
   const promptPresetName = (message: string, fallback = "") => {
@@ -775,7 +799,26 @@ export default function BackgroundSection({ query, sectionFilter }: Props) {
     toast.success(text.customPresets.deleted);
   };
 
-  const handleExportPresets = () => {
+  const importPresetJson = (raw: string) => {
+    try {
+      const count = importCustomVisualizerPresets(raw);
+      if (count <= 0) {
+        toast.error(text.customPresets.invalid);
+        return false;
+      }
+      toast.success(
+        count === 1 ? text.customPresets.importedOne : `${count} ${text.customPresets.importedMany}`
+      );
+      setPresetImportOpen(false);
+      setPresetImportDraft("");
+      return true;
+    } catch {
+      toast.error(text.customPresets.invalid);
+      return false;
+    }
+  };
+
+  const handleCopyExportPresets = () => {
     const exported = exportCustomVisualizerPresets();
     if (navigator.clipboard?.writeText) {
       void navigator.clipboard.writeText(exported).then(
@@ -788,20 +831,60 @@ export default function BackgroundSection({ query, sectionFilter }: Props) {
     window.prompt(text.customPresets.export, exported);
   };
 
-  const handleImportPresets = () => {
-    const raw = window.prompt(text.customPresets.importPrompt, "");
-    if (!raw) return;
+  const handleDownloadPresets = () => {
+    const exported = exportCustomVisualizerPresets();
+    const blob = new Blob([exported], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+    const date = new Date().toISOString().slice(0, 10);
+    anchor.href = url;
+    anchor.download = `spicy-lyrics-presets-${date}.json`;
+    anchor.click();
+    URL.revokeObjectURL(url);
+    toast.success(text.customPresets.downloaded);
+  };
 
-    try {
-      const count = importCustomVisualizerPresets(raw);
-      if (count <= 0) {
-        toast.error(text.customPresets.failed);
-        return;
-      }
-      toast.success(`${count} ${text.customPresets.imported}`);
-    } catch {
-      toast.error(text.customPresets.failed);
+  const openPasteImport = (draft = "") => {
+    setPresetImportDraft(draft);
+    setPresetImportOpen(true);
+  };
+
+  const handleImportPresets = () => {
+    if (!navigator.clipboard?.readText) {
+      toast.error(text.customPresets.clipboardFailed);
+      openPasteImport();
+      return;
     }
+
+    void navigator.clipboard.readText().then(
+      (raw) => {
+        if (!raw.trim()) {
+          toast.error(text.customPresets.invalid);
+          openPasteImport(raw);
+          return;
+        }
+        if (!importPresetJson(raw)) {
+          openPasteImport(raw);
+        }
+      },
+      () => {
+        toast.error(text.customPresets.clipboardFailed);
+        openPasteImport();
+      }
+    );
+  };
+
+  const handleManualImportPresets = () => {
+    if (!presetImportDraft.trim()) {
+      toast.error(text.customPresets.invalid);
+      return;
+    }
+    importPresetJson(presetImportDraft);
+  };
+
+  const closePresetImport = () => {
+    setPresetImportOpen(false);
+    setPresetImportDraft("");
   };
 
   return (
@@ -869,14 +952,59 @@ export default function BackgroundSection({ query, sectionFilter }: Props) {
                 </button>
               </>
             )}
-            <button className="sl-sp-btn" type="button" onClick={handleExportPresets}>
+            <button className="sl-sp-btn" type="button" onClick={handleCopyExportPresets}>
               {text.customPresets.export}
+            </button>
+            <button className="sl-sp-btn" type="button" onClick={handleDownloadPresets}>
+              {text.customPresets.download}
             </button>
             <button className="sl-sp-btn" type="button" onClick={handleImportPresets}>
               {text.customPresets.import}
             </button>
           </div>
         </Row>
+      )}
+
+      {presetImportOpen && (
+        <div className="sl-sp-import-backdrop" onMouseDown={closePresetImport}>
+          <div
+            className="sl-sp-import-dialog"
+            role="dialog"
+            aria-modal="true"
+            aria-label={text.customPresets.pasteTitle}
+            onMouseDown={(event) => event.stopPropagation()}
+          >
+            <div className="sl-sp-import-header">
+              <div>
+                <p className="sl-sp-import-title">{text.customPresets.pasteTitle}</p>
+                <p className="sl-sp-import-description">{text.customPresets.pasteDescription}</p>
+              </div>
+              <button
+                className="sl-sp-import-close"
+                type="button"
+                onClick={closePresetImport}
+                aria-label={text.customPresets.cancel}
+              >
+                x
+              </button>
+            </div>
+            <textarea
+              className="sl-sp-import-textarea"
+              value={presetImportDraft}
+              placeholder={text.customPresets.pastePlaceholder}
+              onChange={(event) => setPresetImportDraft(event.currentTarget.value)}
+              spellCheck={false}
+            />
+            <div className="sl-sp-import-actions">
+              <button className="sl-sp-btn" type="button" onClick={closePresetImport}>
+                {text.customPresets.cancel}
+              </button>
+              <button className="sl-sp-btn" type="button" onClick={handleManualImportPresets}>
+                {text.customPresets.pasteAction}
+              </button>
+            </div>
+          </div>
+        </div>
       )}
 
       {rowVisible(text.performance.label, performanceDescription) && (
@@ -953,6 +1081,28 @@ export default function BackgroundSection({ query, sectionFilter }: Props) {
         </Row>
       )}
 
+      {rowVisible(text.response.label, text.response.description) && (
+        <Row
+          label={text.response.label}
+          description={text.response.description}
+          disabled={dynamicDisabled}
+          disabledReason={text.disabledReason}
+        >
+          <Slider
+            min={-100}
+            max={300}
+            value={backgroundResponse}
+            onChange={(value) => setManualNumber($backgroundResponse.set, value)}
+            valueLabel={formatSignedValue(backgroundResponse, {
+              zero: text.valueWords.original,
+              negative: text.valueWords.smoother,
+              positive: text.valueWords.quicker,
+            })}
+            disabled={dynamicDisabled}
+          />
+        </Row>
+      )}
+
       {glowVisible && <SubsectionTitle>{text.groups.glow}</SubsectionTitle>}
 
       {rowVisible(text.waveGlow.label, text.waveGlow.description) && (
@@ -976,52 +1126,6 @@ export default function BackgroundSection({ query, sectionFilter }: Props) {
           />
         </Row>
       )}
-
-      {rowVisible(text.impact.label, text.impact.description) && (
-        <Row
-          label={text.impact.label}
-          description={text.impact.description}
-          disabled={dynamicDisabled}
-          disabledReason={text.disabledReason}
-        >
-          <Slider
-            min={-100}
-            max={300}
-            value={backgroundDropImpact}
-            onChange={(value) => setManualNumber($backgroundDropImpact.set, value)}
-            valueLabel={formatSignedValue(backgroundDropImpact, {
-              zero: text.valueWords.original,
-              negative: text.valueWords.focused,
-              positive: text.valueWords.broader,
-            })}
-            disabled={dynamicDisabled}
-          />
-        </Row>
-      )}
-
-      {rowVisible(text.glowLimit.label, text.glowLimit.description) && (
-        <Row
-          label={text.glowLimit.label}
-          description={text.glowLimit.description}
-          disabled={dynamicDisabled}
-          disabledReason={text.disabledReason}
-        >
-          <Slider
-            min={-100}
-            max={300}
-            value={globalGlowLimit}
-            onChange={(value) => setManualNumber($globalGlowLimit.set, value)}
-            valueLabel={formatSignedValue(globalGlowLimit, {
-              zero: text.valueWords.original,
-              negative: text.valueWords.safer,
-              positive: text.valueWords.open,
-            })}
-            disabled={dynamicDisabled}
-          />
-        </Row>
-      )}
-
-      {advancedVisible && <SubsectionTitle>{text.groups.advanced}</SubsectionTitle>}
 
       {rowVisible(text.localVariation.label, text.localVariation.description) && (
         <Row
@@ -1061,6 +1165,28 @@ export default function BackgroundSection({ query, sectionFilter }: Props) {
               zero: text.valueWords.original,
               negative: text.valueWords.dimmer,
               positive: text.valueWords.brighter,
+            })}
+            disabled={dynamicDisabled}
+          />
+        </Row>
+      )}
+
+      {rowVisible(text.impact.label, text.impact.description) && (
+        <Row
+          label={text.impact.label}
+          description={text.impact.description}
+          disabled={dynamicDisabled}
+          disabledReason={text.disabledReason}
+        >
+          <Slider
+            min={-100}
+            max={300}
+            value={backgroundDropImpact}
+            onChange={(value) => setManualNumber($backgroundDropImpact.set, value)}
+            valueLabel={formatSignedValue(backgroundDropImpact, {
+              zero: text.valueWords.original,
+              negative: text.valueWords.focused,
+              positive: text.valueWords.broader,
             })}
             disabled={dynamicDisabled}
           />
@@ -1125,30 +1251,30 @@ export default function BackgroundSection({ query, sectionFilter }: Props) {
             onChange={(value) => setManualNumber($absoluteLoudnessScaling.set, value)}
             valueLabel={formatSignedValue(absoluteLoudnessScaling, {
               zero: text.valueWords.original,
-              negative: text.valueWords.open,
-              positive: text.valueWords.safer,
+              negative: text.valueWords.stricter,
+              positive: text.valueWords.sensitive,
             })}
             disabled={dynamicDisabled}
           />
         </Row>
       )}
 
-      {rowVisible(text.response.label, text.response.description) && (
+      {rowVisible(text.glowLimit.label, text.glowLimit.description) && (
         <Row
-          label={text.response.label}
-          description={text.response.description}
+          label={text.glowLimit.label}
+          description={text.glowLimit.description}
           disabled={dynamicDisabled}
           disabledReason={text.disabledReason}
         >
           <Slider
             min={-100}
             max={300}
-            value={backgroundResponse}
-            onChange={(value) => setManualNumber($backgroundResponse.set, value)}
-            valueLabel={formatSignedValue(backgroundResponse, {
+            value={globalGlowLimit}
+            onChange={(value) => setManualNumber($globalGlowLimit.set, value)}
+            valueLabel={formatSignedValue(globalGlowLimit, {
               zero: text.valueWords.original,
-              negative: text.valueWords.smoother,
-              positive: text.valueWords.quicker,
+              negative: text.valueWords.safer,
+              positive: text.valueWords.open,
             })}
             disabled={dynamicDisabled}
           />
@@ -1210,24 +1336,24 @@ export default function BackgroundSection({ query, sectionFilter }: Props) {
 
       {showStarDetails &&
         rowVisible(text.starBrightness.label, text.starBrightness.description) && (
-        <Row
-          label={text.starBrightness.label}
-          description={text.starBrightness.description}
-          disabled={dynamicDisabled || !starsEnabled}
-          disabledReason={starDisabledReason}
-        >
-          <Slider
-            value={starBrightness}
-            onChange={(value) => setManualNumber($starBrightness.set, value)}
-            valueLabel={formatPercentValue(starBrightness, {
-              low: text.valueWords.dimmer,
-              medium: text.valueWords.balanced,
-              high: text.valueWords.brighter,
-            })}
+          <Row
+            label={text.starBrightness.label}
+            description={text.starBrightness.description}
             disabled={dynamicDisabled || !starsEnabled}
-          />
-        </Row>
-      )}
+            disabledReason={starDisabledReason}
+          >
+            <Slider
+              value={starBrightness}
+              onChange={(value) => setManualNumber($starBrightness.set, value)}
+              valueLabel={formatPercentValue(starBrightness, {
+                low: text.valueWords.dimmer,
+                medium: text.valueWords.balanced,
+                high: text.valueWords.brighter,
+              })}
+              disabled={dynamicDisabled || !starsEnabled}
+            />
+          </Row>
+        )}
 
       {showStarDetails && rowVisible(text.starSize.label, text.starSize.description) && (
         <Row
@@ -1271,45 +1397,45 @@ export default function BackgroundSection({ query, sectionFilter }: Props) {
 
       {showStarDetails &&
         rowVisible(text.starVocalSensitivity.label, text.starVocalSensitivity.description) && (
-        <Row
-          label={text.starVocalSensitivity.label}
-          description={text.starVocalSensitivity.description}
-          disabled={dynamicDisabled || !starsEnabled}
-          disabledReason={starDisabledReason}
-        >
-          <Slider
-            value={starVocalSensitivity}
-            onChange={(value) => setManualNumber($starVocalSensitivity.set, value)}
-            valueLabel={formatPercentValue(starVocalSensitivity, {
-              low: text.valueWords.subtler,
-              medium: text.valueWords.balanced,
-              high: text.valueWords.voiceLed,
-            })}
+          <Row
+            label={text.starVocalSensitivity.label}
+            description={text.starVocalSensitivity.description}
             disabled={dynamicDisabled || !starsEnabled}
-          />
-        </Row>
-      )}
+            disabledReason={starDisabledReason}
+          >
+            <Slider
+              value={starVocalSensitivity}
+              onChange={(value) => setManualNumber($starVocalSensitivity.set, value)}
+              valueLabel={formatPercentValue(starVocalSensitivity, {
+                low: text.valueWords.subtler,
+                medium: text.valueWords.balanced,
+                high: text.valueWords.voiceLed,
+              })}
+              disabled={dynamicDisabled || !starsEnabled}
+            />
+          </Row>
+        )}
 
       {showStarDetails &&
         rowVisible(text.starBeatSensitivity.label, text.starBeatSensitivity.description) && (
-        <Row
-          label={text.starBeatSensitivity.label}
-          description={text.starBeatSensitivity.description}
-          disabled={dynamicDisabled || !starsEnabled}
-          disabledReason={starDisabledReason}
-        >
-          <Slider
-            value={starBeatSensitivity}
-            onChange={(value) => setManualNumber($starBeatSensitivity.set, value)}
-            valueLabel={formatPercentValue(starBeatSensitivity, {
-              low: text.valueWords.gentler,
-              medium: text.valueWords.balanced,
-              high: text.valueWords.beatLed,
-            })}
+          <Row
+            label={text.starBeatSensitivity.label}
+            description={text.starBeatSensitivity.description}
             disabled={dynamicDisabled || !starsEnabled}
-          />
-        </Row>
-      )}
+            disabledReason={starDisabledReason}
+          >
+            <Slider
+              value={starBeatSensitivity}
+              onChange={(value) => setManualNumber($starBeatSensitivity.set, value)}
+              valueLabel={formatPercentValue(starBeatSensitivity, {
+                low: text.valueWords.gentler,
+                medium: text.valueWords.balanced,
+                high: text.valueWords.beatLed,
+              })}
+              disabled={dynamicDisabled || !starsEnabled}
+            />
+          </Row>
+        )}
     </>
   );
 }

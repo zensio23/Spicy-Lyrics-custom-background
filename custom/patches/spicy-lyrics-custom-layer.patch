@@ -1,35 +1,102 @@
 diff --git a/README.md b/README.md
-index bf5f9c608639b8560d1fd89cc7a8474bab3b5781..2dfe80f69c1f1328c46d23b0f37da0d6c7118565 100644
+index bf5f9c608639b8560d1fd89cc7a8474bab3b5781..81e22f98403586a2833fc3ad408f3c8ee45d2feb 100644
 --- a/README.md
 +++ b/README.md
-@@ -12,12 +12,24 @@
+@@ -1,30 +1,74 @@
+-# Spicy Lyrics
++# Spicy Lyrics Custom Background
  
- ## 2. Externally (not recommended)
- 1. Make sure you have [Spicetify](https://spicetify.app) installed
+-### Check out our *[Sitee](https://yoursit.ee/lyrics)*
+-#### Make your own at -> [https://yoursit.ee](https://yoursit.ee)
++An experimental visualizer-focused fork of Spicy Lyrics that expands the fullscreen background experience with dynamic wave illumination, vocal-reactive stars, advanced customization, and enhanced audio-reactive visuals.
+ 
+-# How to install Spicy Lyrics
++The goal of this project is to explore alternative visual directions while preserving the clean and immersive experience that makes Spicy Lyrics unique.
+ 
+-## 1. Using the Spicetify Marketplace (recommended)
+-1. Search `Spicy Lyrics` under the "Extensions" tab
+-2. Click the Install button on the Spicy Lyrics extension
+-3. All done!
++## Features
+ 
+-## 2. Externally (not recommended)
+-1. Make sure you have [Spicetify](https://spicetify.app) installed
 -2. Download the [spicy-lyrics.mjs](./builds/spicy-lyrics.mjs) file
 -3. Put the file inside the Spicetify Extensions directory. Find the correct directory here: [https://spicetify.app/docs/customization/extensions#manual-installation](https://spicetify.app/docs/customization/extensions#manual-installation)
 -4. Then, run ```spicetify config extensions spicy-lyrics.mjs```
-+2. Build the local custom version with `bun run build` or use `install-spicy-lyrics.bat`
-+3. Copy both [spicy-lyrics.js](./dist/spicy-lyrics.js) and [spicy-lyrics.mjs](./builds/spicy-lyrics.mjs) into the Spicetify Extensions directory. Find the correct directory here: [https://spicetify.app/docs/customization/extensions#manual-installation](https://spicetify.app/docs/customization/extensions#manual-installation)
-+4. Then, run ```spicetify config extensions spicy-lyrics.js```
- 5. Then apply Spicetify by running ```spicetify apply```
- 6. All done!
+-5. Then apply Spicetify by running ```spicetify apply```
+-6. All done!
++* Dynamic Wave Illumination
++* Vocal-Reactive Stars
++* Advanced Audio-Reactive Controls
++* Custom Presets
++* Preset Import / Export
++* Enhanced Fullscreen Backgrounds
++* Improved Visual Customization
++* Multiple Visualizer Styles and Tuning Options
  
-+## Keeping this custom branch up to date
-+
-+If you are using the custom visualizer branch from this workspace, use the upstream-safe workflow in [docs/UPSTREAM_UPDATES.md](./docs/UPSTREAM_UPDATES.md).
-+
-+Quick commands:
-+
-+```bash
-+bun run upstream:check
-+bun run upstream:update
-+update-from-upstream.bat
-+```
-+
- [![Github Version](https://img.shields.io/github/v/release/spikerko/spicy-lyrics)](https://github.com/spikerko/spicy-lyrics/) [![Github Stars badge](https://img.shields.io/github/stars/spikerko/spicy-lyrics?style=social)](https://github.com/spikerko/spicy-lyrics/) [![Discord Badge](https://dcbadge.limes.pink/api/server/uqgXU5wh8j?style=flat)](https://discord.com/invite/uqgXU5wh8j)
+-[![Github Version](https://img.shields.io/github/v/release/spikerko/spicy-lyrics)](https://github.com/spikerko/spicy-lyrics/) [![Github Stars badge](https://img.shields.io/github/stars/spikerko/spicy-lyrics?style=social)](https://github.com/spikerko/spicy-lyrics/) [![Discord Badge](https://dcbadge.limes.pink/api/server/uqgXU5wh8j?style=flat)](https://discord.com/invite/uqgXU5wh8j)
++### Included Presets
  
- Hi, I'm Spikerko (the person who made this repo). I've been really passionate about this project, and I'm really happy for this project.
+-Hi, I'm Spikerko (the person who made this repo). I've been really passionate about this project, and I'm really happy for this project.
++* Vanilla
++* Smooth
++* Cinematic
++* Energetic
++* Eventually
++* Snow Strippers / Strokes
+ 
+-I've seen a problem with the Spotify Lyrics. They're plain, just static colors. So I wanted to build my own version. And here it is: **Spicy Lyrics**. Hope you like it!
++## Installation
+ 
+-![Extension Example](./previews/page.gif)
++### Requirements
+ 
++* Spicetify installed and configured
+ 
+-*Inspired by [Beautiful Lyrics](https://github.com/surfbryce/beautiful-lyrics)*
++### Setup
++
++1. Download the latest release.
++2. Extract the archive.
++3. Run `install-spicy-lyrics.bat`.
++4. Wait for the installation to finish.
++5. Restart Spotify.
++
++The installer automatically downloads and configures everything required.
++
++## Project Goal
++
++This project is not intended to become an over-the-top spectrum visualizer.
++
++Instead, the focus is on creating a more immersive, customizable, and music-responsive background experience while maintaining readability, aesthetics, and everyday usability.
++
++## Development Status
++
++This project is experimental and actively evolving.
++
++Visual tuning, presets, and effects may continue to change based on feedback and future testing.
++
++## Credits
++
++Built upon the excellent foundation provided by the Spicy Lyrics project and its contributors.
++
++A huge thank you to everyone who helped create and maintain the original project.
++
++## Disclaimer
++
++This project was developed with AI-assisted programming tools.
++
++The concepts, visual direction, feature ideas, testing, tuning decisions, and overall project goals were defined and guided by the project author.
++
++
++## Links
++
++**GitHub Repository**
++https://github.com/zensio23/Spicy-Lyrics-custom-background
++
++**Issues & Feedback**
++https://github.com/zensio23/Spicy-Lyrics-custom-background/issues
 diff --git a/builds/spicy-lyrics.mjs b/builds/spicy-lyrics.mjs
 index 1e1c6c35d5634e24856a22b3fcc78f7cfae6a642..998d167c56e1f3cf8b0592affaa9ddbb4f6d8f05 100644
 --- a/builds/spicy-lyrics.mjs
@@ -96,18 +163,24 @@ index 7c1636206479e5a7d3fef7c381c3e760b72c0baf..315bfbac9df8caed4e0c3878675fd714
        "peerDependencies": {
          "typescript": "^5.9.3",
 diff --git a/package.json b/package.json
-index 515035facf9d498d4e02ad5bfa4d965f5cbafcd1..4320f00ca7197775411e583141591d48004ef601 100644
+index 515035facf9d498d4e02ad5bfa4d965f5cbafcd1..ebd8e076d78e7c93652460511234533c7cc70894 100644
 --- a/package.json
 +++ b/package.json
-@@ -5,9 +5,13 @@
+@@ -1,13 +1,17 @@
+ {
+-  "name": "spicy-lyrics",
+-  "author": "Spikerko",
++  "name": "spicy-lyrics-custom-background",
++  "author": "zensio23",
+   "scripts": {
      "sc": "spicetify-creator",
      "dev": "spicetify-creator dev",
      "build": "spicetify-creator build",
 -    "lint": "oxlint",
 -    "lint:fix": "oxlint --fix",
 -    "fmt": "oxfmt"
-+    "lint": "oxlint . --disable-nested-config --ignore-pattern release/**",
-+    "lint:fix": "oxlint . --disable-nested-config --ignore-pattern release/** --fix",
++    "lint": "oxlint . --disable-nested-config --ignore-pattern \"release/**\"",
++    "lint:fix": "oxlint . --disable-nested-config --ignore-pattern \"release/**\" --fix",
 +    "fmt": "oxfmt",
 +    "upstream:check": "bun scripts/check-upstream.mjs",
 +    "upstream:export-patch": "bun scripts/export-custom-layer.mjs",
@@ -1542,14 +1615,15 @@ index 210ee6d88758b4fffa357159a3486842862b2118..0968b7569e962e2b1b8fb7532f9440c5
  const toasterLogger = new Logger("Toaster");
  
 diff --git a/src/components/ReactComponents/SettingsPanel/BackgroundSection.tsx b/src/components/ReactComponents/SettingsPanel/BackgroundSection.tsx
-index aec4ab520b19d9c99441059f9b5617ed5428792e..b0502e3de7cdbfd6e0daa3424b826e4820a9b4e5 100644
+index aec4ab520b19d9c99441059f9b5617ed5428792e..ff0a282251a933a248ac7040bd10afed44d2352e 100644
 --- a/src/components/ReactComponents/SettingsPanel/BackgroundSection.tsx
 +++ b/src/components/ReactComponents/SettingsPanel/BackgroundSection.tsx
-@@ -1,49 +1,1313 @@
+@@ -1,51 +1,1441 @@
  import { useStore } from "@nanostores/react";
 -import React from "react";
 -import { $showNpvDynamicBg, $staticBackgroundMode } from "../../../utils/stores.ts";
 -import { matches, Row, Select, SectionTitle, Toggle } from "./components.tsx";
++import { useState } from "react";
 +import { toast } from "sonner";
 +import {
 +  $activeCustomVisualizerPresetId,
@@ -1661,7 +1735,6 @@ index aec4ab520b19d9c99441059f9b5617ed5428792e..b0502e3de7cdbfd6e0daa3424b826e48
 +      setup: "Starting point",
 +      motion: "Wave motion",
 +      glow: "Wave glow",
-+      advanced: "Advanced tuning",
 +      stars: "Star layer",
 +    },
 +    staticBackground: {
@@ -1681,15 +1754,16 @@ index aec4ab520b19d9c99441059f9b5617ed5428792e..b0502e3de7cdbfd6e0daa3424b826e48
 +        custom:
 +          "Keeps your manual tuning exactly as it is. Pick another preset anytime to snap back to a clean starting point.",
 +        vanilla: "Exactly the stock Spicy Lyrics look. No added glow, stars, or extra energy.",
-+        smooth: "Dark, calm, and slow with a gentle wave glow.",
-+        cinematic: "Best balanced default. Deep contrast, smooth motion, and clean cover-color glow.",
-+        energetic: "Wave-focused reaction for upbeat music, with controlled drops and no star layer.",
++        smooth: "Calm and slow with a clearly visible but gentle wave glow.",
++        cinematic:
++          "Best balanced default. Deep contrast, smooth motion, and visible cover-color glow.",
++        energetic: "Stronger local wave reactions, punchier drops, and controlled faster motion.",
 +        insane:
 +          "Maximum impact with strong color-driven glow, capped to avoid flat white flashing.",
 +        eventually:
 +          "Dreamy, psychedelic motion with soft flowing waves and magical vocal-focused stars.",
 +        strokesSnowStrippers:
-+          "Sharper pulses, more sparkle, and a faster party response without simply turning brighter.",
++          "Sharper pulses, more sparkle, and a lively party response without messy washout.",
 +      },
 +      options: {
 +        vanilla: "Vanilla",
@@ -1712,8 +1786,9 @@ index aec4ab520b19d9c99441059f9b5617ed5428792e..b0502e3de7cdbfd6e0daa3424b826e48
 +      rename: "Rename",
 +      reset: "Reset",
 +      delete: "Delete",
-+      export: "Export",
-+      import: "Import",
++      export: "Copy JSON",
++      download: "Download JSON",
++      import: "Import Presets",
 +      prefix: "Custom",
 +      manualOnly: "Manual settings",
 +      namePrompt: "Preset name",
@@ -1722,8 +1797,18 @@ index aec4ab520b19d9c99441059f9b5617ed5428792e..b0502e3de7cdbfd6e0daa3424b826e48
 +      deleteConfirm: "Delete this custom preset?",
 +      duplicatePrefix: "Copy of",
 +      selectedSuffix: "is selected.",
-+      copied: "Custom presets copied to clipboard.",
-+      imported: "custom preset(s) imported.",
++      copied: "Presets exported to clipboard.",
++      downloaded: "Preset JSON downloaded.",
++      importedOne: "Imported 1 preset.",
++      importedMany: "presets imported.",
++      invalid: "Invalid preset JSON.",
++      clipboardFailed: "Clipboard access failed, please paste manually.",
++      pasteTitle: "Import presets",
++      pasteDescription:
++        "Paste JSON exported from Spicy Lyrics. The importer keeps existing presets and creates new IDs for conflicts.",
++      pastePlaceholder: '{\n  "version": 1,\n  "presets": []\n}',
++      pasteAction: "Import JSON",
++      cancel: "Cancel",
 +      saved: "Custom preset saved.",
 +      updated: "Custom preset updated.",
 +      renamed: "Custom preset renamed.",
@@ -1759,17 +1844,17 @@ index aec4ab520b19d9c99441059f9b5617ed5428792e..b0502e3de7cdbfd6e0daa3424b826e48
 +    brightness: {
 +      label: "Music Brightness",
 +      description:
-+        "Advanced brightness trim after the glow shape is right. Lower it to preserve dark areas. Raise it only if lit waves still feel too dim.",
++        "Fine-tunes brightness after the glow shape is right. Lower it to preserve dark areas. Raise it if lit waves still feel too dim.",
 +    },
 +    impact: {
 +      label: "Impact Strength",
 +      description:
-+        "Controls how many wave regions participate during musical hits. This adds drama without changing base movement speed.",
++        "Controls how many wave regions activate and how strongly they participate during louder moments. It should add drama without flattening contrast.",
 +    },
 +    loudness: {
-+      label: "Quiet Section Protection",
++      label: "Quiet/Loud Detection",
 +      description:
-+        "Controls how easily quiet sounds can trigger larger reactions. Higher values protect calm sections; lower values let smaller details react sooner.",
++        "Sets how selective the effect is about real song loudness. Negative values reserve strong glow for louder moments. Positive values let medium sections react sooner.",
 +    },
 +    calmIntensity: {
 +      label: "Calm Section Intensity",
@@ -1779,12 +1864,12 @@ index aec4ab520b19d9c99441059f9b5617ed5428792e..b0502e3de7cdbfd6e0daa3424b826e48
 +    loudIntensity: {
 +      label: "Loud Section Intensity",
 +      description:
-+        "Controls how much extra glow loud sections can add. Movement stays controlled by the movement sliders.",
++        "Controls how far choruses and drops can open up. Higher values make more regions glow strongly while still using cover colors.",
 +    },
 +    glowLimit: {
-+      label: "Brightness Cap",
++      label: "Global Brightness Limit",
 +      description:
-+        "Hard cap for the total light added by glowing regions. Lower it if choruses wash out. Raise it only when you want louder sections to fill more of the field.",
++        "Caps the total light added by all glowing regions. Lower it if choruses wash out. Raise it only when you want louder sections to fill more of the field.",
 +    },
 +    response: {
 +      label: "Smoothing / Response",
@@ -1822,12 +1907,12 @@ index aec4ab520b19d9c99441059f9b5617ed5428792e..b0502e3de7cdbfd6e0daa3424b826e48
 +    starAmount: {
 +      label: "Star Amount",
 +      description:
-+        "Adjust how many stars are visible when the layer is enabled. This changes scene density, with internal caps to protect readability.",
++        "Adjust how many stars are visible when the layer is enabled. This changes scene density, not vocal sensitivity.",
 +    },
 +    starBrightness: {
 +      label: "Star Brightness",
 +      description:
-+        "Main control for visible twinkle strength. Increase this before adding more stars if you want more sparkle without clutter.",
++        "Main control for visible twinkle strength. Increase this before adding more stars if you want more sparkle.",
 +    },
 +    starSize: {
 +      label: "Star Size",
@@ -1892,7 +1977,6 @@ index aec4ab520b19d9c99441059f9b5617ed5428792e..b0502e3de7cdbfd6e0daa3424b826e48
 +      setup: "Startpunkt",
 +      motion: "Wellenbewegung",
 +      glow: "Wellen-Glow",
-+      advanced: "Erweiterte Abstimmung",
 +      stars: "Sternebene",
 +    },
 +    staticBackground: {
@@ -1914,17 +1998,17 @@ index aec4ab520b19d9c99441059f9b5617ed5428792e..b0502e3de7cdbfd6e0daa3424b826e48
 +          "Behaelt deine manuelle Abstimmung unveraendert bei. Du kannst jederzeit ein anderes Preset waehlen, um auf einen klaren Ausgangspunkt zurueckzugehen.",
 +        vanilla:
 +          "Genau der originale Spicy-Lyrics-Look. Kein zusaetzlicher Glow, keine Sterne und keine Extra-Energie.",
-+        smooth: "Dunkel, ruhig und langsam mit einem sanften Wellen-Glow.",
++        smooth: "Ruhig und langsam mit einem klar sichtbaren, aber sanften Wellen-Glow.",
 +        cinematic:
-+          "Der beste Standard. Tiefer Kontrast, ruhige Bewegung und sauberer Coverfarben-Glow.",
++          "Der beste Standard. Tiefer Kontrast, ruhige Bewegung und sichtbarer Coverfarben-Glow.",
 +        energetic:
-+          "Wellenfokussierte Reaktion fuer schnellere Musik, mit kontrollierten Drops und ohne Sternebene.",
++          "Staerkere lokale Wellenreaktionen, markantere Drops und kontrolliert schnellere Bewegung.",
 +        insane:
 +          "Maximaler Impact mit starkem farbbasiertem Glow, aber begrenzt gegen flaches weisses Blitzen.",
 +        eventually:
 +          "Traeumerische, psychedelische Bewegung mit weichen Wellen und magischen, vocal-fokussierten Sternen.",
 +        strokesSnowStrippers:
-+          "Schaerfere Pulse, mehr Funkeln und eine schnellere Party-Reaktion, ohne einfach heller zu werden.",
++          "Schaerfere Pulse, mehr Funkeln und eine schnellere, partyartige Reaktion.",
 +      },
 +      options: {
 +        vanilla: "Vanilla",
@@ -1947,8 +2031,9 @@ index aec4ab520b19d9c99441059f9b5617ed5428792e..b0502e3de7cdbfd6e0daa3424b826e48
 +      rename: "Umbenennen",
 +      reset: "Zuruecksetzen",
 +      delete: "Loeschen",
-+      export: "Export",
-+      import: "Import",
++      export: "JSON kopieren",
++      download: "JSON herunterladen",
++      import: "Presets importieren",
 +      prefix: "Eigen",
 +      manualOnly: "Manuelle Werte",
 +      namePrompt: "Preset-Name",
@@ -1957,8 +2042,18 @@ index aec4ab520b19d9c99441059f9b5617ed5428792e..b0502e3de7cdbfd6e0daa3424b826e48
 +      deleteConfirm: "Dieses eigene Preset loeschen?",
 +      duplicatePrefix: "Kopie von",
 +      selectedSuffix: "ist ausgewaehlt.",
-+      copied: "Eigene Presets wurden in die Zwischenablage kopiert.",
-+      imported: "eigene(s) Preset(s) importiert.",
++      copied: "Presets wurden in die Zwischenablage exportiert.",
++      downloaded: "Preset-JSON wurde heruntergeladen.",
++      importedOne: "1 Preset importiert.",
++      importedMany: "Presets importiert.",
++      invalid: "Ungueltiges Preset-JSON.",
++      clipboardFailed: "Zwischenablage konnte nicht gelesen werden. Bitte manuell einfuegen.",
++      pasteTitle: "Presets importieren",
++      pasteDescription:
++        "Fuege JSON ein, das aus Spicy Lyrics exportiert wurde. Bestehende Presets bleiben erhalten; bei ID-Konflikten werden neue IDs erzeugt.",
++      pastePlaceholder: '{\n  "version": 1,\n  "presets": []\n}',
++      pasteAction: "JSON importieren",
++      cancel: "Abbrechen",
 +      saved: "Eigenes Preset gespeichert.",
 +      updated: "Eigenes Preset aktualisiert.",
 +      renamed: "Eigenes Preset umbenannt.",
@@ -1994,17 +2089,17 @@ index aec4ab520b19d9c99441059f9b5617ed5428792e..b0502e3de7cdbfd6e0daa3424b826e48
 +    brightness: {
 +      label: "Musik-Helligkeit",
 +      description:
-+        "Erweiterte Helligkeits-Feinabstimmung, nachdem die Glow-Form passt. Senke sie fuer dunklere Bereiche. Erhoehe sie nur, wenn beleuchtete Wellen zu dunkel wirken.",
++        "Feinabstimmung der Helligkeit, nachdem die Glow-Form passt. Senke sie fuer dunklere Bereiche. Erhoehe sie, wenn beleuchtete Wellen zu dunkel wirken.",
 +    },
 +    impact: {
 +      label: "Impact-Staerke",
 +      description:
-+        "Steuert, wie viele Wellenregionen bei musikalischen Hits teilnehmen. Das bringt Drama, ohne die Grundbewegung zu veraendern.",
++        "Steuert, wie viele Wellenregionen bei lauten Momenten aktiv werden und wie stark sie teilnehmen. Das bringt Drama, ohne den Kontrast flach zu machen.",
 +    },
 +    loudness: {
-+      label: "Schutz ruhiger Stellen",
++      label: "Leise/Laut-Erkennung",
 +      description:
-+        "Steuert, wie leicht leise Sounds groessere Reaktionen ausloesen. Hoehere Werte schuetzen ruhige Stellen; niedrigere Werte lassen kleine Details frueher reagieren.",
++        "Legt fest, wie selektiv der Effekt echte Song-Lautheit bewertet. Negative Werte reservieren starken Glow fuer laute Momente. Positive Werte lassen mittlere Stellen frueher reagieren.",
 +    },
 +    calmIntensity: {
 +      label: "Intensitaet ruhiger Stellen",
@@ -2014,12 +2109,12 @@ index aec4ab520b19d9c99441059f9b5617ed5428792e..b0502e3de7cdbfd6e0daa3424b826e48
 +    loudIntensity: {
 +      label: "Intensitaet lauter Stellen",
 +      description:
-+        "Steuert, wie viel Extra-Glow laute Stellen addieren duerfen. Bewegung bleibt bei den Bewegungs-Slidern.",
++        "Steuert, wie weit Refrains und Drops aufgehen duerfen. Hoehere Werte lassen mehr Regionen stark leuchten, weiterhin mit Coverfarben.",
 +    },
 +    glowLimit: {
-+      label: "Helligkeitslimit",
++      label: "Globales Helligkeitslimit",
 +      description:
-+        "Harte Grenze fuer das gesamte Licht aller leuchtenden Regionen. Senke sie, wenn Refrains ausbleichen. Erhoehe sie nur, wenn laute Stellen mehr Feld fuellen sollen.",
++        "Begrenzt das gesamte Licht aller leuchtenden Regionen. Senke es, wenn Refrains ausbleichen. Erhoehe es nur, wenn laute Stellen mehr Feld fuellen sollen.",
 +    },
 +    response: {
 +      label: "Glaettung / Reaktion",
@@ -2057,12 +2152,12 @@ index aec4ab520b19d9c99441059f9b5617ed5428792e..b0502e3de7cdbfd6e0daa3424b826e48
 +    starAmount: {
 +      label: "Sternanzahl",
 +      description:
-+        "Bestimmt, wie viele Sterne sichtbar sind, wenn die Ebene aktiv ist. Das veraendert die Szenen-Dichte, mit internen Grenzen fuer Lesbarkeit.",
++        "Bestimmt, wie viele Sterne sichtbar sind, wenn die Ebene aktiv ist. Das veraendert die Szenen-Dichte, nicht die Vocal-Empfindlichkeit.",
 +    },
 +    starBrightness: {
 +      label: "Sternhelligkeit",
 +      description:
-+        "Die Hauptsteuerung fuer sichtbare Twinkle-Staerke. Erhoehe das zuerst, bevor du mehr Sterne hinzufuegst, wenn du mehr Funkeln ohne Unruhe willst.",
++        "Die Hauptsteuerung fuer sichtbare Twinkle-Staerke. Erhoehe das zuerst, bevor du mehr Sterne hinzufuegst, wenn du mehr Funkeln willst.",
 +    },
 +    starSize: {
 +      label: "Sterngroesse",
@@ -2099,10 +2194,7 @@ index aec4ab520b19d9c99441059f9b5617ed5428792e..b0502e3de7cdbfd6e0daa3424b826e48
 +  return `${value < 0 ? labels.negative : labels.positive} | ${signed}`;
 +}
 +
-+function formatPercentValue(
-+  value: number,
-+  labels: { low: string; medium: string; high: string }
-+) {
++function formatPercentValue(value: number, labels: { low: string; medium: string; high: string }) {
 +  const descriptor = value <= 33 ? labels.low : value >= 67 ? labels.high : labels.medium;
 +  return `${descriptor} | ${value}%`;
 +}
@@ -2134,6 +2226,8 @@ index aec4ab520b19d9c99441059f9b5617ed5428792e..b0502e3de7cdbfd6e0daa3424b826e48
 +  const starTwinkleSpeed = useStore($starTwinkleSpeed);
 +  const starVocalSensitivity = useStore($starVocalSensitivity);
 +  const starBeatSensitivity = useStore($starBeatSensitivity);
++  const [presetImportOpen, setPresetImportOpen] = useState(false);
++  const [presetImportDraft, setPresetImportDraft] = useState("");
  
    if (sectionFilter !== "All" && sectionFilter !== SECTION_NAME) return null;
  
@@ -2160,7 +2254,9 @@ index aec4ab520b19d9c99441059f9b5617ed5428792e..b0502e3de7cdbfd6e0daa3424b826e48
 +      : "high"
 +  ) as "low" | "medium" | "high";
 +  const performanceDescription = `${text.performance.description} ${text.performance.notes[performanceKey]}`;
-+  const starShapeKey = (starShapeOptions.includes(starShape) ? starShape : "mixed") as keyof typeof text.starShape.notes;
++  const starShapeKey = (
++    starShapeOptions.includes(starShape) ? starShape : "mixed"
++  ) as keyof typeof text.starShape.notes;
 +  const starShapeDescription = `${text.starShape.description} ${text.starShape.notes[starShapeKey]}`;
 +  const setupVisible =
 +    rowVisible(text.staticBackground.label, text.staticBackground.description) ||
@@ -2171,18 +2267,17 @@ index aec4ab520b19d9c99441059f9b5617ed5428792e..b0502e3de7cdbfd6e0daa3424b826e48
 +    rowVisible(text.language.label, text.language.description);
 +  const motionVisible =
 +    rowVisible(text.movement.label, text.movement.description) ||
-+    rowVisible(text.beatdrop.label, text.beatdrop.description);
++    rowVisible(text.beatdrop.label, text.beatdrop.description) ||
++    rowVisible(text.response.label, text.response.description);
 +  const glowVisible =
 +    rowVisible(text.waveGlow.label, text.waveGlow.description) ||
-+    rowVisible(text.impact.label, text.impact.description) ||
-+    rowVisible(text.glowLimit.label, text.glowLimit.description);
-+  const advancedVisible =
 +    rowVisible(text.localVariation.label, text.localVariation.description) ||
 +    rowVisible(text.brightness.label, text.brightness.description) ||
++    rowVisible(text.impact.label, text.impact.description) ||
 +    rowVisible(text.calmIntensity.label, text.calmIntensity.description) ||
 +    rowVisible(text.loudIntensity.label, text.loudIntensity.description) ||
 +    rowVisible(text.loudness.label, text.loudness.description) ||
-+    rowVisible(text.response.label, text.response.description);
++    rowVisible(text.glowLimit.label, text.glowLimit.description);
 +  const starsVisible =
 +    rowVisible(text.starsEnabled.label, text.starsEnabled.description) ||
 +    (showStarDetails &&
@@ -2193,7 +2288,7 @@ index aec4ab520b19d9c99441059f9b5617ed5428792e..b0502e3de7cdbfd6e0daa3424b826e48
 +        rowVisible(text.starTwinkle.label, text.starTwinkle.description) ||
 +        rowVisible(text.starVocalSensitivity.label, text.starVocalSensitivity.description) ||
 +        rowVisible(text.starBeatSensitivity.label, text.starBeatSensitivity.description)));
-+  const hasVisibleRow = setupVisible || motionVisible || glowVisible || advancedVisible || starsVisible;
++  const hasVisibleRow = setupVisible || motionVisible || glowVisible || starsVisible;
 +
 +  if (!hasVisibleRow) return null;
 +
@@ -2225,7 +2320,9 @@ index aec4ab520b19d9c99441059f9b5617ed5428792e..b0502e3de7cdbfd6e0daa3424b826e48
 +    ...customPresets.map((preset) => `${text.customPresets.prefix}: ${preset.name}`),
 +    text.preset.options.custom,
 +  ];
-+  const selectedPresetValue = selectedCustomPreset ? `custom:${selectedCustomPreset.id}` : visualizerPreset;
++  const selectedPresetValue = selectedCustomPreset
++    ? `custom:${selectedCustomPreset.id}`
++    : visualizerPreset;
 +  const starDisabledReason = dynamicDisabled ? text.disabledReason : text.starsDisabledReason;
 +
 +  const promptPresetName = (message: string, fallback = "") => {
@@ -2266,7 +2363,8 @@ index aec4ab520b19d9c99441059f9b5617ed5428792e..b0502e3de7cdbfd6e0daa3424b826e48
 +    }
 +    toast.success(text.customPresets.saved);
 +  };
-+
+ 
+-  if (!r1 && !r2) return null;
 +  const handleSaveSelectedPreset = () => {
 +    if (!selectedCustomPreset) return;
 +    if (!updateCustomVisualizerPreset(selectedCustomPreset.id)) {
@@ -2282,8 +2380,7 @@ index aec4ab520b19d9c99441059f9b5617ed5428792e..b0502e3de7cdbfd6e0daa3424b826e48
 +      handleSaveNewPreset();
 +      return;
 +    }
- 
--  if (!r1 && !r2) return null;
++
 +    const sourceName = typeof source === "string" ? text.preset.options[source] : source.name;
 +    const name = promptPresetName(
 +      text.customPresets.namePrompt,
@@ -2330,7 +2427,26 @@ index aec4ab520b19d9c99441059f9b5617ed5428792e..b0502e3de7cdbfd6e0daa3424b826e48
 +    toast.success(text.customPresets.deleted);
 +  };
 +
-+  const handleExportPresets = () => {
++  const importPresetJson = (raw: string) => {
++    try {
++      const count = importCustomVisualizerPresets(raw);
++      if (count <= 0) {
++        toast.error(text.customPresets.invalid);
++        return false;
++      }
++      toast.success(
++        count === 1 ? text.customPresets.importedOne : `${count} ${text.customPresets.importedMany}`
++      );
++      setPresetImportOpen(false);
++      setPresetImportDraft("");
++      return true;
++    } catch {
++      toast.error(text.customPresets.invalid);
++      return false;
++    }
++  };
++
++  const handleCopyExportPresets = () => {
 +    const exported = exportCustomVisualizerPresets();
 +    if (navigator.clipboard?.writeText) {
 +      void navigator.clipboard.writeText(exported).then(
@@ -2343,31 +2459,71 @@ index aec4ab520b19d9c99441059f9b5617ed5428792e..b0502e3de7cdbfd6e0daa3424b826e48
 +    window.prompt(text.customPresets.export, exported);
 +  };
 +
-+  const handleImportPresets = () => {
-+    const raw = window.prompt(text.customPresets.importPrompt, "");
-+    if (!raw) return;
++  const handleDownloadPresets = () => {
++    const exported = exportCustomVisualizerPresets();
++    const blob = new Blob([exported], { type: "application/json" });
++    const url = URL.createObjectURL(blob);
++    const anchor = document.createElement("a");
++    const date = new Date().toISOString().slice(0, 10);
++    anchor.href = url;
++    anchor.download = `spicy-lyrics-presets-${date}.json`;
++    anchor.click();
++    URL.revokeObjectURL(url);
++    toast.success(text.customPresets.downloaded);
++  };
 +
-+    try {
-+      const count = importCustomVisualizerPresets(raw);
-+      if (count <= 0) {
-+        toast.error(text.customPresets.failed);
-+        return;
-+      }
-+      toast.success(`${count} ${text.customPresets.imported}`);
-+    } catch {
-+      toast.error(text.customPresets.failed);
++  const openPasteImport = (draft = "") => {
++    setPresetImportDraft(draft);
++    setPresetImportOpen(true);
++  };
++
++  const handleImportPresets = () => {
++    if (!navigator.clipboard?.readText) {
++      toast.error(text.customPresets.clipboardFailed);
++      openPasteImport();
++      return;
 +    }
++
++    void navigator.clipboard.readText().then(
++      (raw) => {
++        if (!raw.trim()) {
++          toast.error(text.customPresets.invalid);
++          openPasteImport(raw);
++          return;
++        }
++        if (!importPresetJson(raw)) {
++          openPasteImport(raw);
++        }
++      },
++      () => {
++        toast.error(text.customPresets.clipboardFailed);
++        openPasteImport();
++      }
++    );
++  };
++
++  const handleManualImportPresets = () => {
++    if (!presetImportDraft.trim()) {
++      toast.error(text.customPresets.invalid);
++      return;
++    }
++    importPresetJson(presetImportDraft);
++  };
++
++  const closePresetImport = () => {
++    setPresetImportOpen(false);
++    setPresetImportDraft("");
 +  };
  
    return (
      <>
 -      <SectionTitle>Background</SectionTitle>
 +      <SectionTitle>{text.sectionTitle}</SectionTitle>
++
++      {setupVisible && <SubsectionTitle>{text.groups.setup}</SubsectionTitle>}
  
 -      {r1 && (
 -        <Row label="Static Background" description="Pin the background to a fixed image or color instead of animating it.">
-+      {setupVisible && <SubsectionTitle>{text.groups.setup}</SubsectionTitle>}
-+
 +      {rowVisible(text.staticBackground.label, text.staticBackground.description) && (
 +        <Row label={text.staticBackground.label} description={text.staticBackground.description}>
            <Select
@@ -2377,11 +2533,10 @@ index aec4ab520b19d9c99441059f9b5617ed5428792e..b0502e3de7cdbfd6e0daa3424b826e48
 -            onChange={(v) => $staticBackgroundMode.set(v)}
 +            labels={text.staticBackground.options}
 +            onChange={(value) => $staticBackgroundMode.set(value)}
-           />
-         </Row>
-       )}
- 
--      {r2 && (
++          />
++        </Row>
++      )}
++
 +      {rowVisible(text.npvBackground.label, text.npvBackground.description) && (
 +        <Row label={text.npvBackground.label} description={text.npvBackground.description}>
 +          <Toggle checked={showNpvDynamicBg} onChange={(value) => $showNpvDynamicBg.set(value)} />
@@ -2430,8 +2585,11 @@ index aec4ab520b19d9c99441059f9b5617ed5428792e..b0502e3de7cdbfd6e0daa3424b826e48
 +                </button>
 +              </>
 +            )}
-+            <button className="sl-sp-btn" type="button" onClick={handleExportPresets}>
++            <button className="sl-sp-btn" type="button" onClick={handleCopyExportPresets}>
 +              {text.customPresets.export}
++            </button>
++            <button className="sl-sp-btn" type="button" onClick={handleDownloadPresets}>
++              {text.customPresets.download}
 +            </button>
 +            <button className="sl-sp-btn" type="button" onClick={handleImportPresets}>
 +              {text.customPresets.import}
@@ -2440,16 +2598,55 @@ index aec4ab520b19d9c99441059f9b5617ed5428792e..b0502e3de7cdbfd6e0daa3424b826e48
 +        </Row>
 +      )}
 +
++      {presetImportOpen && (
++        <div className="sl-sp-import-backdrop" onMouseDown={closePresetImport}>
++          <div
++            className="sl-sp-import-dialog"
++            role="dialog"
++            aria-modal="true"
++            aria-label={text.customPresets.pasteTitle}
++            onMouseDown={(event) => event.stopPropagation()}
++          >
++            <div className="sl-sp-import-header">
++              <div>
++                <p className="sl-sp-import-title">{text.customPresets.pasteTitle}</p>
++                <p className="sl-sp-import-description">{text.customPresets.pasteDescription}</p>
++              </div>
++              <button
++                className="sl-sp-import-close"
++                type="button"
++                onClick={closePresetImport}
++                aria-label={text.customPresets.cancel}
++              >
++                x
++              </button>
++            </div>
++            <textarea
++              className="sl-sp-import-textarea"
++              value={presetImportDraft}
++              placeholder={text.customPresets.pastePlaceholder}
++              onChange={(event) => setPresetImportDraft(event.currentTarget.value)}
++              spellCheck={false}
++            />
++            <div className="sl-sp-import-actions">
++              <button className="sl-sp-btn" type="button" onClick={closePresetImport}>
++                {text.customPresets.cancel}
++              </button>
++              <button className="sl-sp-btn" type="button" onClick={handleManualImportPresets}>
++                {text.customPresets.pasteAction}
++              </button>
++            </div>
++          </div>
++        </div>
++      )}
++
 +      {rowVisible(text.performance.label, performanceDescription) && (
-         <Row
--          label="Display Dynamic Background in Now Playing View"
--          description="Show the animated background in the Now Playing panel."
++        <Row
 +          label={text.performance.label}
 +          description={performanceDescription}
 +          disabled={dynamicDisabled}
 +          disabledReason={text.disabledReason}
-         >
--          <Toggle checked={showNpvDynamicBg} onChange={(v) => $showNpvDynamicBg.set(v)} />
++        >
 +          <Select
 +            value={performanceMode}
 +            options={performanceOptions}
@@ -2517,6 +2714,28 @@ index aec4ab520b19d9c99441059f9b5617ed5428792e..b0502e3de7cdbfd6e0daa3424b826e48
 +        </Row>
 +      )}
 +
++      {rowVisible(text.response.label, text.response.description) && (
++        <Row
++          label={text.response.label}
++          description={text.response.description}
++          disabled={dynamicDisabled}
++          disabledReason={text.disabledReason}
++        >
++          <Slider
++            min={-100}
++            max={300}
++            value={backgroundResponse}
++            onChange={(value) => setManualNumber($backgroundResponse.set, value)}
++            valueLabel={formatSignedValue(backgroundResponse, {
++              zero: text.valueWords.original,
++              negative: text.valueWords.smoother,
++              positive: text.valueWords.quicker,
++            })}
++            disabled={dynamicDisabled}
++          />
++        </Row>
++      )}
++
 +      {glowVisible && <SubsectionTitle>{text.groups.glow}</SubsectionTitle>}
 +
 +      {rowVisible(text.waveGlow.label, text.waveGlow.description) && (
@@ -2540,52 +2759,6 @@ index aec4ab520b19d9c99441059f9b5617ed5428792e..b0502e3de7cdbfd6e0daa3424b826e48
 +          />
 +        </Row>
 +      )}
-+
-+      {rowVisible(text.impact.label, text.impact.description) && (
-+        <Row
-+          label={text.impact.label}
-+          description={text.impact.description}
-+          disabled={dynamicDisabled}
-+          disabledReason={text.disabledReason}
-+        >
-+          <Slider
-+            min={-100}
-+            max={300}
-+            value={backgroundDropImpact}
-+            onChange={(value) => setManualNumber($backgroundDropImpact.set, value)}
-+            valueLabel={formatSignedValue(backgroundDropImpact, {
-+              zero: text.valueWords.original,
-+              negative: text.valueWords.focused,
-+              positive: text.valueWords.broader,
-+            })}
-+            disabled={dynamicDisabled}
-+          />
-+        </Row>
-+      )}
-+
-+      {rowVisible(text.glowLimit.label, text.glowLimit.description) && (
-+        <Row
-+          label={text.glowLimit.label}
-+          description={text.glowLimit.description}
-+          disabled={dynamicDisabled}
-+          disabledReason={text.disabledReason}
-+        >
-+          <Slider
-+            min={-100}
-+            max={300}
-+            value={globalGlowLimit}
-+            onChange={(value) => setManualNumber($globalGlowLimit.set, value)}
-+            valueLabel={formatSignedValue(globalGlowLimit, {
-+              zero: text.valueWords.original,
-+              negative: text.valueWords.safer,
-+              positive: text.valueWords.open,
-+            })}
-+            disabled={dynamicDisabled}
-+          />
-+        </Row>
-+      )}
-+
-+      {advancedVisible && <SubsectionTitle>{text.groups.advanced}</SubsectionTitle>}
 +
 +      {rowVisible(text.localVariation.label, text.localVariation.description) && (
 +        <Row
@@ -2625,6 +2798,28 @@ index aec4ab520b19d9c99441059f9b5617ed5428792e..b0502e3de7cdbfd6e0daa3424b826e48
 +              zero: text.valueWords.original,
 +              negative: text.valueWords.dimmer,
 +              positive: text.valueWords.brighter,
++            })}
++            disabled={dynamicDisabled}
++          />
++        </Row>
++      )}
++
++      {rowVisible(text.impact.label, text.impact.description) && (
++        <Row
++          label={text.impact.label}
++          description={text.impact.description}
++          disabled={dynamicDisabled}
++          disabledReason={text.disabledReason}
++        >
++          <Slider
++            min={-100}
++            max={300}
++            value={backgroundDropImpact}
++            onChange={(value) => setManualNumber($backgroundDropImpact.set, value)}
++            valueLabel={formatSignedValue(backgroundDropImpact, {
++              zero: text.valueWords.original,
++              negative: text.valueWords.focused,
++              positive: text.valueWords.broader,
 +            })}
 +            disabled={dynamicDisabled}
 +          />
@@ -2689,30 +2884,30 @@ index aec4ab520b19d9c99441059f9b5617ed5428792e..b0502e3de7cdbfd6e0daa3424b826e48
 +            onChange={(value) => setManualNumber($absoluteLoudnessScaling.set, value)}
 +            valueLabel={formatSignedValue(absoluteLoudnessScaling, {
 +              zero: text.valueWords.original,
-+              negative: text.valueWords.open,
-+              positive: text.valueWords.safer,
++              negative: text.valueWords.stricter,
++              positive: text.valueWords.sensitive,
 +            })}
 +            disabled={dynamicDisabled}
 +          />
 +        </Row>
 +      )}
 +
-+      {rowVisible(text.response.label, text.response.description) && (
++      {rowVisible(text.glowLimit.label, text.glowLimit.description) && (
 +        <Row
-+          label={text.response.label}
-+          description={text.response.description}
++          label={text.glowLimit.label}
++          description={text.glowLimit.description}
 +          disabled={dynamicDisabled}
 +          disabledReason={text.disabledReason}
 +        >
 +          <Slider
 +            min={-100}
 +            max={300}
-+            value={backgroundResponse}
-+            onChange={(value) => setManualNumber($backgroundResponse.set, value)}
-+            valueLabel={formatSignedValue(backgroundResponse, {
++            value={globalGlowLimit}
++            onChange={(value) => setManualNumber($globalGlowLimit.set, value)}
++            valueLabel={formatSignedValue(globalGlowLimit, {
 +              zero: text.valueWords.original,
-+              negative: text.valueWords.smoother,
-+              positive: text.valueWords.quicker,
++              negative: text.valueWords.safer,
++              positive: text.valueWords.open,
 +            })}
 +            disabled={dynamicDisabled}
 +          />
@@ -2768,30 +2963,31 @@ index aec4ab520b19d9c99441059f9b5617ed5428792e..b0502e3de7cdbfd6e0daa3424b826e48
 +              high: text.valueWords.dense,
 +            })}
 +            disabled={dynamicDisabled || !starsEnabled}
-+          />
-+        </Row>
-+      )}
-+
+           />
+         </Row>
+       )}
+ 
+-      {r2 && (
 +      {showStarDetails &&
 +        rowVisible(text.starBrightness.label, text.starBrightness.description) && (
-+        <Row
-+          label={text.starBrightness.label}
-+          description={text.starBrightness.description}
-+          disabled={dynamicDisabled || !starsEnabled}
-+          disabledReason={starDisabledReason}
-+        >
-+          <Slider
-+            value={starBrightness}
-+            onChange={(value) => setManualNumber($starBrightness.set, value)}
-+            valueLabel={formatPercentValue(starBrightness, {
-+              low: text.valueWords.dimmer,
-+              medium: text.valueWords.balanced,
-+              high: text.valueWords.brighter,
-+            })}
++          <Row
++            label={text.starBrightness.label}
++            description={text.starBrightness.description}
 +            disabled={dynamicDisabled || !starsEnabled}
-+          />
-+        </Row>
-+      )}
++            disabledReason={starDisabledReason}
++          >
++            <Slider
++              value={starBrightness}
++              onChange={(value) => setManualNumber($starBrightness.set, value)}
++              valueLabel={formatPercentValue(starBrightness, {
++                low: text.valueWords.dimmer,
++                medium: text.valueWords.balanced,
++                high: text.valueWords.brighter,
++              })}
++              disabled={dynamicDisabled || !starsEnabled}
++            />
++          </Row>
++        )}
 +
 +      {showStarDetails && rowVisible(text.starSize.label, text.starSize.description) && (
 +        <Row
@@ -2814,12 +3010,15 @@ index aec4ab520b19d9c99441059f9b5617ed5428792e..b0502e3de7cdbfd6e0daa3424b826e48
 +      )}
 +
 +      {showStarDetails && rowVisible(text.starTwinkle.label, text.starTwinkle.description) && (
-+        <Row
+         <Row
+-          label="Display Dynamic Background in Now Playing View"
+-          description="Show the animated background in the Now Playing panel."
 +          label={text.starTwinkle.label}
 +          description={text.starTwinkle.description}
 +          disabled={dynamicDisabled || !starsEnabled}
 +          disabledReason={starDisabledReason}
-+        >
+         >
+-          <Toggle checked={showNpvDynamicBg} onChange={(v) => $showNpvDynamicBg.set(v)} />
 +          <Slider
 +            value={starTwinkleSpeed}
 +            onChange={(value) => setManualNumber($starTwinkleSpeed.set, value)}
@@ -2830,51 +3029,53 @@ index aec4ab520b19d9c99441059f9b5617ed5428792e..b0502e3de7cdbfd6e0daa3424b826e48
 +            })}
 +            disabled={dynamicDisabled || !starsEnabled}
 +          />
-+        </Row>
-+      )}
+         </Row>
+       )}
 +
 +      {showStarDetails &&
 +        rowVisible(text.starVocalSensitivity.label, text.starVocalSensitivity.description) && (
-+        <Row
-+          label={text.starVocalSensitivity.label}
-+          description={text.starVocalSensitivity.description}
-+          disabled={dynamicDisabled || !starsEnabled}
-+          disabledReason={starDisabledReason}
-+        >
-+          <Slider
-+            value={starVocalSensitivity}
-+            onChange={(value) => setManualNumber($starVocalSensitivity.set, value)}
-+            valueLabel={formatPercentValue(starVocalSensitivity, {
-+              low: text.valueWords.subtler,
-+              medium: text.valueWords.balanced,
-+              high: text.valueWords.voiceLed,
-+            })}
++          <Row
++            label={text.starVocalSensitivity.label}
++            description={text.starVocalSensitivity.description}
 +            disabled={dynamicDisabled || !starsEnabled}
-+          />
-+        </Row>
-+      )}
++            disabledReason={starDisabledReason}
++          >
++            <Slider
++              value={starVocalSensitivity}
++              onChange={(value) => setManualNumber($starVocalSensitivity.set, value)}
++              valueLabel={formatPercentValue(starVocalSensitivity, {
++                low: text.valueWords.subtler,
++                medium: text.valueWords.balanced,
++                high: text.valueWords.voiceLed,
++              })}
++              disabled={dynamicDisabled || !starsEnabled}
++            />
++          </Row>
++        )}
 +
 +      {showStarDetails &&
 +        rowVisible(text.starBeatSensitivity.label, text.starBeatSensitivity.description) && (
-+        <Row
-+          label={text.starBeatSensitivity.label}
-+          description={text.starBeatSensitivity.description}
-+          disabled={dynamicDisabled || !starsEnabled}
-+          disabledReason={starDisabledReason}
-+        >
-+          <Slider
-+            value={starBeatSensitivity}
-+            onChange={(value) => setManualNumber($starBeatSensitivity.set, value)}
-+            valueLabel={formatPercentValue(starBeatSensitivity, {
-+              low: text.valueWords.gentler,
-+              medium: text.valueWords.balanced,
-+              high: text.valueWords.beatLed,
-+            })}
++          <Row
++            label={text.starBeatSensitivity.label}
++            description={text.starBeatSensitivity.description}
 +            disabled={dynamicDisabled || !starsEnabled}
-+          />
-         </Row>
-       )}
++            disabledReason={starDisabledReason}
++          >
++            <Slider
++              value={starBeatSensitivity}
++              onChange={(value) => setManualNumber($starBeatSensitivity.set, value)}
++              valueLabel={formatPercentValue(starBeatSensitivity, {
++                low: text.valueWords.gentler,
++                medium: text.valueWords.balanced,
++                high: text.valueWords.beatLed,
++              })}
++              disabled={dynamicDisabled || !starsEnabled}
++            />
++          </Row>
++        )}
      </>
+   );
+ }
 diff --git a/src/components/ReactComponents/SettingsPanel/components.tsx b/src/components/ReactComponents/SettingsPanel/components.tsx
 index 7572080ca8e58f59e0da917eb773f7a23f04eeb3..8d230c50812a3c8d170f63e010fdcc1400ba632a 100644
 --- a/src/components/ReactComponents/SettingsPanel/components.tsx
@@ -3147,7 +3348,7 @@ index ff87c84a0ddefd63d4855043978c54b444598450..e883dc517d0cd72f648b515b67032f11
  
  const sidebarLogger = new Logger("Sidebar Lyrics");
 diff --git a/src/css/DynamicBG/spicy-dynamic-bg.css b/src/css/DynamicBG/spicy-dynamic-bg.css
-index 974af3e085604e5179d5132ce81c990aed2d4619..4f51da8598dc6c14ff2218bcbe237ee23b19a60b 100644
+index 974af3e085604e5179d5132ce81c990aed2d4619..4b292f8b168e0e8d71c510ae95eea5aaaa6b687d 100644
 --- a/src/css/DynamicBG/spicy-dynamic-bg.css
 +++ b/src/css/DynamicBG/spicy-dynamic-bg.css
 @@ -6,16 +6,27 @@
@@ -3196,11 +3397,11 @@ index 974af3e085604e5179d5132ce81c990aed2d4619..4f51da8598dc6c14ff2218bcbe237ee2
 +
 +.spicy-dynamic-bg-lights {
 +  mix-blend-mode: screen;
-+  opacity: 0.62;
++  opacity: 0.74;
 +}
 +
 +.spicy-dynamic-bg-stars {
-+  opacity: 0.86;
++  opacity: 0.92;
 +  mix-blend-mode: screen;
 +}
 +
@@ -3425,7 +3626,7 @@ index 974af3e085604e5179d5132ce81c990aed2d4619..4f51da8598dc6c14ff2218bcbe237ee2
 \ No newline at end of file
 +}
 diff --git a/src/css/settings-panel.css b/src/css/settings-panel.css
-index fed1979306f0b4004fd5fbacced509c5c793092f..21a362d5ac2a6b4e21996b37751144b3da84229f 100644
+index fed1979306f0b4004fd5fbacced509c5c793092f..9833bb2593d6c5fa316a14b64ba58b6dc229fe47 100644
 --- a/src/css/settings-panel.css
 +++ b/src/css/settings-panel.css
 @@ -230,6 +230,15 @@ sl-generic-modal.SpicyLyricsModal .sl-modal-overlay {
@@ -3444,7 +3645,7 @@ index fed1979306f0b4004fd5fbacced509c5c793092f..21a362d5ac2a6b4e21996b37751144b3
    .sl-sp-row {
      display: flex;
      align-items: center;
-@@ -436,6 +445,76 @@ sl-generic-modal.SpicyLyricsModal .sl-modal-overlay {
+@@ -436,6 +445,184 @@ sl-generic-modal.SpicyLyricsModal .sl-modal-overlay {
    }
  
    /* Standalone tooltip — uses the shared material */
@@ -3518,10 +3719,118 @@ index fed1979306f0b4004fd5fbacced509c5c793092f..21a362d5ac2a6b4e21996b37751144b3
 +    max-width: min(360px, 38vw);
 +  }
 +
++  .sl-sp-import-backdrop {
++    position: fixed;
++    inset: 0;
++    z-index: 240;
++    display: flex;
++    align-items: center;
++    justify-content: center;
++    padding: var(--space-4);
++    background: rgba(0, 0, 0, 0.28);
++  }
++
++  .sl-sp-import-dialog {
++    width: min(560px, 86vw);
++    max-height: min(620px, 84vh);
++    display: flex;
++    flex-direction: column;
++    gap: var(--space-3);
++    padding: var(--space-4);
++    border-radius: var(--radius-lg);
++    background: var(--material-regular-bg);
++    -webkit-backdrop-filter: var(--material-regular-blur);
++    backdrop-filter: var(--material-regular-blur);
++    box-shadow:
++      var(--liquid-cast-soft),
++      inset 0 0 0 1px var(--hairline);
++    animation: sl-sp-import-in 0.2s cubic-bezier(0.23, 1, 0.32, 1);
++  }
++
++  @keyframes sl-sp-import-in {
++    from {
++      opacity: 0;
++      transform: translateY(8px) scale(0.98);
++    }
++    to {
++      opacity: 1;
++      transform: translateY(0) scale(1);
++    }
++  }
++
++  .sl-sp-import-header {
++    display: flex;
++    align-items: flex-start;
++    justify-content: space-between;
++    gap: var(--space-3);
++  }
++
++  .sl-sp-import-title {
++    margin: 0 0 4px;
++    color: var(--color-text-primary);
++    font-size: var(--text-body-size) !important;
++    font-weight: var(--w-semibold);
++  }
++
++  .sl-sp-import-description {
++    margin: 0;
++    color: var(--color-text-secondary);
++    font-size: var(--text-caption-size) !important;
++    line-height: 1.45;
++  }
++
++  .sl-sp-import-close {
++    width: 30px;
++    height: 30px;
++    border: 0;
++    border-radius: 999px;
++    background: var(--accent-tint-bg);
++    color: var(--color-text-secondary);
++    cursor: pointer;
++    font-size: var(--text-body-size) !important;
++    transition:
++      background var(--dur-fast) var(--ease-standard),
++      color var(--dur-fast) var(--ease-standard);
++
++    &:hover {
++      background: var(--accent-tint-bg-hover);
++      color: var(--color-text-primary);
++    }
++  }
++
++  .sl-sp-import-textarea {
++    min-height: 220px;
++    resize: vertical;
++    border: 0;
++    border-radius: var(--radius-md);
++    outline: none;
++    padding: var(--space-3);
++    background: rgba(0, 0, 0, 0.22);
++    color: var(--color-text-primary);
++    box-shadow: inset 0 0 0 1px var(--hairline);
++    font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
++    font-size: var(--text-caption-size) !important;
++    line-height: 1.45;
++
++    &:focus {
++      box-shadow: inset 0 0 0 1px var(--hairline-strong);
++    }
++
++    &::placeholder {
++      color: var(--color-text-tertiary);
++    }
++  }
++
++  .sl-sp-import-actions {
++    display: flex;
++    justify-content: flex-end;
++    gap: 8px;
++  }
++
    .sl-sp-tooltip-wrap {
      position: relative;
      display: inline-flex;
-@@ -496,5 +575,16 @@ sl-generic-modal.SpicyLyricsModal .sl-modal-overlay {
+@@ -496,5 +683,16 @@ sl-generic-modal.SpicyLyricsModal .sl-modal-overlay {
      &:active {
        transform: scale(0.97);
      }
@@ -5905,10 +6214,10 @@ index 0000000000000000000000000000000000000000..4b6ed35e01e66b2c68470bc7966b7ea7
 
 diff --git a/src/components/DynamicBG/AliveArtworkBackground.ts b/src/components/DynamicBG/AliveArtworkBackground.ts
 new file mode 100644
-index 0000000000000000000000000000000000000000..de63c1184264bcae2ceb48bad9808ae27b8ae03f
+index 0000000000000000000000000000000000000000..db5ec82346ad24c8b2c8fb611b626f3a852aab3f
 --- /dev/null
 +++ b/src/components/DynamicBG/AliveArtworkBackground.ts
-@@ -0,0 +1,1445 @@
+@@ -0,0 +1,1432 @@
 +import Kawarp, { type KawarpOptions } from "@kawarp/core";
 +import type { BackgroundAudioSnapshot } from "./types.ts";
 +import {
@@ -6148,12 +6457,12 @@ index 0000000000000000000000000000000000000000..de63c1184264bcae2ceb48bad9808ae2
 +    renderScale,
 +    starsEnabled: $starsEnabled.get(),
 +    starShape: $starShape.get(),
-+    starAmount: Math.round(lerp(6, 120, clamp($starAmount.get() / 100))),
-+    starSize: lerp(1.4, 14.8, clamp($starSize.get() / 100)),
-+    starBrightness: lerp(0.34, 3.7, clamp($starBrightness.get() / 100)),
-+    starTwinkleSpeed: lerp(0.55, 2.75, clamp($starTwinkleSpeed.get() / 100)),
-+    starVocalSensitivity: lerp(0.45, 2.6, clamp($starVocalSensitivity.get() / 100)),
-+    starBeatSensitivity: lerp(0, 1.32, clamp($starBeatSensitivity.get() / 100)),
++    starAmount: Math.round(lerp(6, 132, clamp($starAmount.get() / 100))),
++    starSize: lerp(1.4, 17.6, clamp($starSize.get() / 100)),
++    starBrightness: lerp(0.38, 4.4, clamp($starBrightness.get() / 100)),
++    starTwinkleSpeed: lerp(0.55, 3.05, clamp($starTwinkleSpeed.get() / 100)),
++    starVocalSensitivity: lerp(0.45, 2.85, clamp($starVocalSensitivity.get() / 100)),
++    starBeatSensitivity: lerp(0, 1.55, clamp($starBeatSensitivity.get() / 100)),
 +  };
 +}
 +
@@ -6387,7 +6696,7 @@ index 0000000000000000000000000000000000000000..de63c1184264bcae2ceb48bad9808ae2
 +
 +    const snapshot = this.readAudioSnapshot();
 +    this.smoothSignals(snapshot, settings, deltaMs);
-+    this.updateKawarpSpeed(settings, snapshot, deltaMs);
++    this.updateKawarpSpeed(settings, snapshot);
 +    this.renderLights(settings, deltaMs, now);
 +    this.renderStars(settings, deltaMs, now);
 +    return true;
@@ -6453,9 +6762,9 @@ index 0000000000000000000000000000000000000000..de63c1184264bcae2ceb48bad9808ae2
 +  }
 +
 +  private getMaxStarCount(settings: BackgroundVisualSettings) {
-+    if (settings.performanceMode === "low") return 24;
-+    if (settings.performanceMode === "medium") return 48;
-+    return 82;
++    if (settings.performanceMode === "low") return 28;
++    if (settings.performanceMode === "medium") return 54;
++    return 92;
 +  }
 +
 +  private hasCustomGlow(settings: BackgroundVisualSettings) {
@@ -6481,14 +6790,14 @@ index 0000000000000000000000000000000000000000..de63c1184264bcae2ceb48bad9808ae2
 +    const loudnessThreshold = mapAroundNeutral(
 +      settings.absoluteLoudnessScaling,
 +      0.3,
-+      0.18,
-+      0.48
++      0.44,
++      0.12
 +    );
 +    const loudnessFloor = mapAroundNeutral(
 +      settings.absoluteLoudnessScaling,
 +      0.02,
-+      0.006,
-+      0.16
++      0.2,
++      0.06
 +    );
 +    const loudnessGate = smoothstep(loudnessThreshold, 0.96, snapshot.absoluteLoudness);
 +    const gatedLoudness = clamp(
@@ -6583,28 +6892,28 @@ index 0000000000000000000000000000000000000000..de63c1184264bcae2ceb48bad9808ae2
 +
 +  private updateKawarpSpeed(
 +    settings: BackgroundVisualSettings,
-+    snapshot: BackgroundAudioSnapshot,
-+    deltaMs: number
++    snapshot: BackgroundAudioSnapshot
 +  ) {
-+    const movementScale = scaleAroundNeutral(settings.movementSpeed, 0.42, 2.1);
-+    const beatdropScale = scaleAroundNeutral(settings.beatdropMultiplier, 0.62, 2.25);
++    const movementScale = scaleAroundNeutral(settings.movementSpeed, 0.42, 2.25);
++    const beatdropScale = scaleAroundNeutral(settings.beatdropMultiplier, 0.62, 2.45);
++    const loudScale = scaleAroundNeutral(settings.loudSectionIntensity, 0.7, 1.65);
 +    const dropDriveRaw =
 +      this.visualSignals.drop * 0.36 +
 +      this.visualSignals.impact * 0.22 +
 +      this.visualSignals.beat * 0.14 +
 +      this.visualSignals.transient * 0.05;
-+    const dropDrive = smoothstep(0.22, 0.88, dropDriveRaw);
-+    const dynamicBeatdrop = lerp(1, beatdropScale, dropDrive);
++    const dropDrive = smoothstep(0.18, 0.84, dropDriveRaw);
++    const dynamicBeatdrop = lerp(1, beatdropScale, clamp(dropDrive * loudScale));
 +    const pausedBase = snapshot.isPlaying ? 1 : 0.1;
 +    const baseSpeed = snapshot.baseAnimationSpeed || pausedBase;
-+    const targetSpeed = clamp(baseSpeed * movementScale * dynamicBeatdrop, 0.06, 2.35);
-+    const speedResponse = scaleAroundNeutral(settings.response, 1.55, 0.82);
++    const targetSpeed = clamp(baseSpeed * movementScale * dynamicBeatdrop, 0.06, 2.55);
++    const speedResponse = scaleAroundNeutral(settings.response, 1.45, 0.74);
 +    const speed = approach(
 +      this.smoothedKawarpSpeed,
 +      targetSpeed,
-+      deltaMs,
-+      220 * speedResponse,
-+      720 * speedResponse
++      1000 / Math.max(24, settings.fpsLimit),
++      180 * speedResponse,
++      620 * speedResponse
 +    );
 +    this.smoothedKawarpSpeed = speed;
 +
@@ -6855,13 +7164,13 @@ index 0000000000000000000000000000000000000000..de63c1184264bcae2ceb48bad9808ae2
 +
 +    this.setLightsVisible(true);
 +
-+    const waveGlowScale = scaleAroundNeutral(settings.waveGlowStrength, 0.34, 2.35);
-+    const beatBrightnessScale = scaleAroundNeutral(settings.beatBrightness, 0.55, 1.75);
-+    const impactScale = scaleAroundNeutral(settings.dropImpact, 0.55, 1.95);
-+    const localVariationScale = scaleAroundNeutral(settings.localWaveVariation, 0.55, 2.05);
-+    const calmScale = scaleAroundNeutral(settings.calmSectionIntensity, 0.2, 1.35);
-+    const loudScale = scaleAroundNeutral(settings.loudSectionIntensity, 0.62, 1.72);
-+    const glowLimitScale = mapAroundNeutral(settings.glowLimit, 0.082, 0.035, 0.16);
++    const waveGlowScale = scaleAroundNeutral(settings.waveGlowStrength, 0.28, 2.9);
++    const beatBrightnessScale = scaleAroundNeutral(settings.beatBrightness, 0.42, 2.35);
++    const impactScale = scaleAroundNeutral(settings.dropImpact, 0.42, 2.45);
++    const localVariationScale = scaleAroundNeutral(settings.localWaveVariation, 0.42, 2.4);
++    const calmScale = scaleAroundNeutral(settings.calmSectionIntensity, 0.16, 1.55);
++    const loudScale = scaleAroundNeutral(settings.loudSectionIntensity, 0.5, 2.15);
++    const glowLimitScale = mapAroundNeutral(settings.glowLimit, 0.095, 0.045, 0.24);
 +    const waveGlowPositive = positiveTuning(settings.waveGlowStrength);
 +    const waveGlowNegative = negativeTuning(settings.waveGlowStrength);
 +    const brightnessPositive = positiveTuning(settings.beatBrightness);
@@ -6888,42 +7197,42 @@ index 0000000000000000000000000000000000000000..de63c1184264bcae2ceb48bad9808ae2
 +        this.visualSignals.bass * 0.08 +
 +        this.visualSignals.loudness * 0.06
 +    );
-+    const loudSectionEnergy = clamp(
-+      this.visualSignals.drop * 0.4 +
++    const chorusLift = clamp(
++      (this.visualSignals.drop * 0.4 +
 +        this.visualSignals.impact * 0.32 +
 +        this.visualSignals.loudness * 0.1 +
-+        this.visualSignals.beat * 0.06
++        this.visualSignals.beat * 0.06) *
++        loudScale
 +    );
-+    const chorusLift = clamp(loudSectionEnergy * loudScale);
-+    const sceneEnergy = clamp(fieldEnergy * 0.72 + pulseEnergy * 0.12 + chorusLift * 0.32);
++    const sceneEnergy = clamp(fieldEnergy * 0.68 + pulseEnergy * 0.14 + chorusLift * 0.45);
 +    const localParticipation = smoothstep(0.12, 0.4, sceneEnergy);
 +    const broadParticipation = smoothstep(0.34, 0.72, sceneEnergy + chorusLift * 0.14);
 +    const peakParticipation = smoothstep(0.58, 0.98, chorusLift + sceneEnergy * 0.22);
 +    const activeRegionFraction = clamp(
 +      0.1 +
 +        waveGlowPositive * 0.04 +
-+        localParticipation * (0.1 + calmPositive * 0.035) +
-+        broadParticipation * (0.11 + impactPositive * 0.13) +
-+        peakParticipation * (0.16 + impactPositive * 0.17 + loudPositive * 0.045) -
++        localParticipation * (0.12 + calmPositive * 0.05) +
++        broadParticipation * (0.12 + impactPositive * 0.1) +
++        peakParticipation * (0.18 + impactPositive * 0.2 + loudPositive * 0.08) -
 +        impactNegative * 0.18 -
 +        localVariationNegative * 0.1,
 +      0.08,
-+      lerp(0.55, 0.82, clamp(peakParticipation * 0.75 + impactPositive * 0.25))
++      lerp(0.62, 0.92, peakParticipation + impactPositive * 0.35)
 +    );
 +    const fieldFloor = clamp(
 +      fieldEnergy *
 +        localParticipation *
 +        calmScale *
-+        (0.012 + waveGlowPositive * 0.04 + brightnessPositive * 0.012) *
++        (0.016 + waveGlowPositive * 0.055 + brightnessPositive * 0.022 + impactPositive * 0.012) *
 +        lerp(1, 0.5, waveGlowNegative),
 +      0,
-+      0.075
++      0.11
 +    );
 +    const chorusField = clamp(
-+      (chorusLift * 0.42 + broadParticipation * 0.03 + peakParticipation * 0.052) *
-+        (0.014 + waveGlowPositive * 0.028 + impactPositive * 0.018 + loudPositive * 0.026),
++      (chorusLift * 0.58 + broadParticipation * 0.045 + peakParticipation * 0.09) *
++        (0.018 + impactPositive * 0.058 + waveGlowPositive * 0.032 + loudPositive * 0.028),
 +      0,
-+      0.11
++      0.16
 +    );
 +
 +    const rawTargets: number[] = [];
@@ -6973,9 +7282,12 @@ index 0000000000000000000000000000000000000000..de63c1184264bcae2ceb48bad9808ae2
 +        (fieldFloor * waveGlowScale +
 +          chorusField * (0.62 + emitter.featureScore * 0.28) +
 +          colorSignal *
-+            (0.095 + waveGlowPositive * 0.12 + localParticipation * 0.035) +
-+          fieldEnergy * waveGlowScale * (0.022 + broadParticipation * 0.055) +
-+          pulseEnergy * impactScale * (0.052 + peakParticipation * 0.035)) *
++            (0.105 +
++              waveGlowPositive * 0.16 +
++              brightnessPositive * 0.04 +
++              localParticipation * 0.035) +
++          fieldEnergy * waveGlowScale * (0.035 + broadParticipation * 0.095) +
++          pulseEnergy * impactScale * (0.07 + peakParticipation * 0.045)) *
 +          emitter.intensity *
 +          beatBrightnessScale *
 +          (0.78 + emitter.featureScore * 0.28) *
@@ -7000,16 +7312,16 @@ index 0000000000000000000000000000000000000000..de63c1184264bcae2ceb48bad9808ae2
 +          : smoothstep(
 +              Math.max(0, cutoff * lerp(0.3, 0.16, broadParticipation)),
 +              Math.max(0.001, cutoff * lerp(1.12, 0.94, peakParticipation)),
-+              rawTarget + fieldFloor * (0.04 + broadParticipation * 0.08) + chorusField * 0.08
++              rawTarget + fieldFloor * (0.08 + broadParticipation * 0.16) + chorusField * 0.18
 +            );
 +      const floorTarget =
-+        (fieldFloor * (0.16 + emitter.featureScore * 0.12) +
-+          chorusField * (0.06 + peakParticipation * 0.08)) *
++        (fieldFloor * (0.22 + emitter.featureScore * 0.18) +
++          chorusField * (0.1 + peakParticipation * 0.12)) *
 +        lerp(1, 0.58, waveGlowNegative);
 +      const target = clamp(
 +        Math.max(floorTarget, rawTarget * regionalGate) *
 +          (0.82 + emitter.featureScore * 0.2) *
-+          lerp(1, 1.18, peakParticipation)
++          lerp(1, 1.28, peakParticipation)
 +      );
 +
 +      emitter.current = approach(
@@ -7025,24 +7337,13 @@ index 0000000000000000000000000000000000000000..de63c1184264bcae2ceb48bad9808ae2
 +
 +    const combinedGlow =
 +      activeIntensities.reduce((sum, value) => sum + value, 0) / Math.max(1, this.emitters.length);
-+    const brightnessPressure = clamp(
-+      waveGlowPositive * 0.32 +
-+        brightnessPositive * 0.34 +
-+        impactPositive * 0.18 +
-+        loudPositive * 0.16
-+    );
-+    const safeGlowLimit =
-+      glowLimitScale * lerp(1, 0.72, brightnessPressure * (0.35 + broadParticipation * 0.65));
-+    const globalScale = combinedGlow > safeGlowLimit ? safeGlowLimit / combinedGlow : 1;
++    const globalScale = combinedGlow > glowLimitScale ? glowLimitScale / combinedGlow : 1;
 +    const fieldBloom =
-+      0.34 + waveGlowPositive * 0.18 + impactPositive * 0.09 + peakParticipation * 0.1;
++      0.42 + waveGlowPositive * 0.24 + impactPositive * 0.14 + peakParticipation * 0.12;
 +
 +    context.globalCompositeOperation = "screen";
 +
 +    for (const emitter of this.emitters) {
-+      const brightColorGuard = lerp(1, 0.58, smoothstep(0.64, 0.92, emitter.lightness));
-+      const brightSceneGuard = lerp(1, 0.78, brightnessPressure * broadParticipation);
-+      const alphaGuard = brightColorGuard * brightSceneGuard;
 +      const intensity = emitter.current * globalScale;
 +      if (intensity <= 0.01) continue;
 +
@@ -7059,38 +7360,33 @@ index 0000000000000000000000000000000000000000..de63c1184264bcae2ceb48bad9808ae2
 +      const y = (emitter.y + offsetY) * height;
 +      const radius = Math.max(
 +        28,
-+        emitter.radius *
++          emitter.radius *
 +          Math.min(width, height) *
-+          (0.78 +
-+            fieldBloom * 0.16 +
-+            this.visualSignals.beat * 0.04 +
-+            this.visualSignals.drop * 0.08)
++          (0.82 + fieldBloom * 0.18 + this.visualSignals.beat * 0.06 + this.visualSignals.drop * 0.12)
 +      );
-+      const haloRadius = radius * (1 + waveGlowPositive * 0.14 + peakParticipation * 0.1);
++      const haloRadius = radius * (1.05 + waveGlowPositive * 0.2 + peakParticipation * 0.14);
 +      const pulseRadius =
-+        radius * (0.62 + this.visualSignals.beat * 0.035 + this.visualSignals.drop * 0.065);
++        radius * (0.64 + this.visualSignals.beat * 0.04 + this.visualSignals.drop * 0.08);
 +
 +      const [red, green, blue] = emitter.glowColor;
 +      const outerAlpha = clamp(
 +        intensity *
-+          alphaGuard *
 +          (0.028 +
-+            waveGlowPositive * 0.044 +
-+            brightnessPositive * 0.022 +
-+            peakParticipation * 0.04),
++            waveGlowPositive * 0.055 +
++            brightnessPositive * 0.032 +
++            peakParticipation * 0.052),
 +        0,
-+        0.16
++        0.2
 +      );
 +      const pulseAlpha = clamp(
 +        intensity *
-+          alphaGuard *
 +          (0.026 +
-+            brightnessPositive * 0.032 +
-+            pulseEnergy * 0.028 +
-+            peakParticipation * 0.026 +
++            brightnessPositive * 0.044 +
++            pulseEnergy * 0.034 +
++            peakParticipation * 0.032 +
 +            this.visualSignals.presence * 0.008),
 +        0,
-+        0.13
++        0.16
 +      );
 +
 +      context.save();
@@ -7160,7 +7456,7 @@ index 0000000000000000000000000000000000000000..de63c1184264bcae2ceb48bad9808ae2
 +    const vocalDrive = clamp(
 +      (phraseEnergy * 0.56 + sustainEnergy * 0.44) * settings.starVocalSensitivity
 +    );
-+    const beatDrive = clamp(beatEnergy * settings.starBeatSensitivity * 0.42);
++    const beatDrive = clamp(beatEnergy * settings.starBeatSensitivity * 0.5);
 +
 +    for (const star of this.stars) {
 +      const slowTwinkle =
@@ -7246,7 +7542,7 @@ index 0000000000000000000000000000000000000000..de63c1184264bcae2ceb48bad9808ae2
 +          beatLift * 0.03 +
 +          flare * 0.14,
 +        0.02,
-+        0.84
++        0.92
 +      );
 +      const targetBrightness = clamp(
 +        settings.starBrightness *
@@ -7257,7 +7553,7 @@ index 0000000000000000000000000000000000000000..de63c1184264bcae2ceb48bad9808ae2
 +            beatLift * 0.06 +
 +            flare * 0.92),
 +        0.22,
-+        4.9
++        6
 +      );
 +      const targetScale = clamp(
 +        0.82 +
@@ -7267,7 +7563,7 @@ index 0000000000000000000000000000000000000000..de63c1184264bcae2ceb48bad9808ae2
 +          flare * 0.24 * shapeScaleBoost +
 +          star.sizeScale * 0.05,
 +        0.7,
-+        1.74
++        1.96
 +      );
 +      const targetGlow = clamp(
 +        0.16 +
@@ -7277,7 +7573,7 @@ index 0000000000000000000000000000000000000000..de63c1184264bcae2ceb48bad9808ae2
 +          beatLift * 0.03 +
 +          flare * 0.76 * shapeGlowBoost,
 +        0.08,
-+        1.82
++        2.2
 +      );
 +      const targetCoreOpacity = clamp(
 +        0.42 + livingTwinkle * 0.2 + vocalLift * 0.14 + breathLift * 0.05 + flare * 0.28,
@@ -7958,10 +8254,10 @@ index 0000000000000000000000000000000000000000..dfb45eb1f23e9f471161ce535d9f48c8
 
 diff --git a/src/utils/visualizerSettings.ts b/src/utils/visualizerSettings.ts
 new file mode 100644
-index 0000000000000000000000000000000000000000..07b80a3acad16258bc7d59bdfc5a584bcef254da
+index 0000000000000000000000000000000000000000..7d8f3149af2beff05335ec257860a3146a0ab585
 --- /dev/null
 +++ b/src/utils/visualizerSettings.ts
-@@ -0,0 +1,564 @@
+@@ -0,0 +1,648 @@
 +import {
 +  $activeCustomVisualizerPresetId,
 +  $absoluteLoudnessScaling,
@@ -8030,6 +8326,30 @@ index 0000000000000000000000000000000000000000..07b80a3acad16258bc7d59bdfc5a584b
 +  updatedAt: number;
 +}
 +
++const SUPPORTED_PRESET_VALUE_KEYS = [
++  "backgroundBeatBrightness",
++  "backgroundBeatGlowStrength",
++  "backgroundDropImpact",
++  "backgroundMovementSpeed",
++  "beatdropSpeedMultiplier",
++  "perColorReactivity",
++  "calmSectionIntensity",
++  "loudSectionIntensity",
++  "globalGlowLimit",
++  "backgroundResponse",
++  "absoluteLoudnessScaling",
++  "starsEnabled",
++  "starShape",
++  "starAmount",
++  "starBrightness",
++  "starSize",
++  "starTwinkleSpeed",
++  "starVocalSensitivity",
++  "starBeatSensitivity",
++] as const satisfies readonly (keyof VisualizerPresetValues)[];
++
++const SUPPORTED_PRESET_VALUE_KEY_SET = new Set<string>(SUPPORTED_PRESET_VALUE_KEYS);
++
 +export const VISUALIZER_PRESET_ORDER: VisualizerPreset[] = [
 +  "vanilla",
 +  "cinematic",
@@ -8067,17 +8387,17 @@ index 0000000000000000000000000000000000000000..07b80a3acad16258bc7d59bdfc5a584b
 +    starBeatSensitivity: 16,
 +  },
 +  smooth: {
-+    backgroundBeatBrightness: -18,
-+    backgroundBeatGlowStrength: 18,
-+    backgroundDropImpact: -14,
-+    backgroundMovementSpeed: -48,
-+    beatdropSpeedMultiplier: -38,
-+    perColorReactivity: 18,
-+    calmSectionIntensity: -34,
-+    loudSectionIntensity: -26,
-+    globalGlowLimit: -42,
-+    backgroundResponse: -62,
-+    absoluteLoudnessScaling: 34,
++    backgroundBeatBrightness: -12,
++    backgroundBeatGlowStrength: 24,
++    backgroundDropImpact: -8,
++    backgroundMovementSpeed: -44,
++    beatdropSpeedMultiplier: -34,
++    perColorReactivity: 24,
++    calmSectionIntensity: -26,
++    loudSectionIntensity: -18,
++    globalGlowLimit: -34,
++    backgroundResponse: -56,
++    absoluteLoudnessScaling: -28,
 +    starsEnabled: false,
 +    starShape: "softDot",
 +    starAmount: 28,
@@ -8088,17 +8408,17 @@ index 0000000000000000000000000000000000000000..07b80a3acad16258bc7d59bdfc5a584b
 +    starBeatSensitivity: 8,
 +  },
 +  cinematic: {
-+    backgroundBeatBrightness: 10,
-+    backgroundBeatGlowStrength: 54,
-+    backgroundDropImpact: 38,
-+    backgroundMovementSpeed: -10,
-+    beatdropSpeedMultiplier: 10,
-+    perColorReactivity: 46,
-+    calmSectionIntensity: -22,
-+    loudSectionIntensity: 28,
-+    globalGlowLimit: -18,
-+    backgroundResponse: -34,
-+    absoluteLoudnessScaling: 14,
++    backgroundBeatBrightness: 18,
++    backgroundBeatGlowStrength: 70,
++    backgroundDropImpact: 54,
++    backgroundMovementSpeed: -6,
++    beatdropSpeedMultiplier: 18,
++    perColorReactivity: 64,
++    calmSectionIntensity: -18,
++    loudSectionIntensity: 48,
++    globalGlowLimit: -8,
++    backgroundResponse: -28,
++    absoluteLoudnessScaling: -8,
 +    starsEnabled: false,
 +    starShape: "realStar",
 +    starAmount: 32,
@@ -8109,17 +8429,17 @@ index 0000000000000000000000000000000000000000..07b80a3acad16258bc7d59bdfc5a584b
 +    starBeatSensitivity: 10,
 +  },
 +  energetic: {
-+    backgroundBeatBrightness: 24,
-+    backgroundBeatGlowStrength: 88,
-+    backgroundDropImpact: 82,
-+    backgroundMovementSpeed: 18,
-+    beatdropSpeedMultiplier: 58,
-+    perColorReactivity: 64,
-+    calmSectionIntensity: -18,
-+    loudSectionIntensity: 58,
-+    globalGlowLimit: -4,
-+    backgroundResponse: -10,
-+    absoluteLoudnessScaling: 8,
++    backgroundBeatBrightness: 34,
++    backgroundBeatGlowStrength: 104,
++    backgroundDropImpact: 96,
++    backgroundMovementSpeed: 24,
++    beatdropSpeedMultiplier: 72,
++    perColorReactivity: 82,
++    calmSectionIntensity: -10,
++    loudSectionIntensity: 86,
++    globalGlowLimit: 6,
++    backgroundResponse: -4,
++    absoluteLoudnessScaling: 2,
 +    starsEnabled: false,
 +    starShape: "sparkleStar",
 +    starAmount: 44,
@@ -8130,17 +8450,17 @@ index 0000000000000000000000000000000000000000..07b80a3acad16258bc7d59bdfc5a584b
 +    starBeatSensitivity: 22,
 +  },
 +  insane: {
-+    backgroundBeatBrightness: 40,
-+    backgroundBeatGlowStrength: 132,
-+    backgroundDropImpact: 150,
-+    backgroundMovementSpeed: 46,
-+    beatdropSpeedMultiplier: 130,
-+    perColorReactivity: 92,
-+    calmSectionIntensity: -10,
-+    loudSectionIntensity: 104,
-+    globalGlowLimit: 8,
-+    backgroundResponse: 6,
-+    absoluteLoudnessScaling: 0,
++    backgroundBeatBrightness: 52,
++    backgroundBeatGlowStrength: 148,
++    backgroundDropImpact: 166,
++    backgroundMovementSpeed: 54,
++    beatdropSpeedMultiplier: 138,
++    perColorReactivity: 116,
++    calmSectionIntensity: -4,
++    loudSectionIntensity: 132,
++    globalGlowLimit: 22,
++    backgroundResponse: 12,
++    absoluteLoudnessScaling: 8,
 +    starsEnabled: false,
 +    starShape: "crossStar",
 +    starAmount: 60,
@@ -8151,46 +8471,46 @@ index 0000000000000000000000000000000000000000..07b80a3acad16258bc7d59bdfc5a584b
 +    starBeatSensitivity: 34,
 +  },
 +  eventually: {
-+    backgroundBeatBrightness: 0,
-+    backgroundBeatGlowStrength: 46,
-+    backgroundDropImpact: 24,
++    backgroundBeatBrightness: 4,
++    backgroundBeatGlowStrength: 56,
++    backgroundDropImpact: 28,
 +    backgroundMovementSpeed: -38,
 +    beatdropSpeedMultiplier: -28,
-+    perColorReactivity: 62,
-+    calmSectionIntensity: 8,
-+    loudSectionIntensity: 22,
-+    globalGlowLimit: -24,
++    perColorReactivity: 74,
++    calmSectionIntensity: 16,
++    loudSectionIntensity: 30,
++    globalGlowLimit: -18,
 +    backgroundResponse: -54,
-+    absoluteLoudnessScaling: 20,
++    absoluteLoudnessScaling: -18,
 +    starsEnabled: true,
 +    starShape: "sparkleStar",
-+    starAmount: 34,
-+    starBrightness: 62,
-+    starSize: 56,
-+    starTwinkleSpeed: 72,
-+    starVocalSensitivity: 92,
++    starAmount: 40,
++    starBrightness: 74,
++    starSize: 68,
++    starTwinkleSpeed: 86,
++    starVocalSensitivity: 100,
 +    starBeatSensitivity: 4,
 +  },
 +  strokesSnowStrippers: {
-+    backgroundBeatBrightness: 18,
-+    backgroundBeatGlowStrength: 76,
-+    backgroundDropImpact: 92,
-+    backgroundMovementSpeed: 46,
-+    beatdropSpeedMultiplier: 112,
-+    perColorReactivity: 76,
-+    calmSectionIntensity: -28,
-+    loudSectionIntensity: 72,
-+    globalGlowLimit: -4,
-+    backgroundResponse: 18,
-+    absoluteLoudnessScaling: -6,
++    backgroundBeatBrightness: 30,
++    backgroundBeatGlowStrength: 94,
++    backgroundDropImpact: 108,
++    backgroundMovementSpeed: 42,
++    beatdropSpeedMultiplier: 104,
++    perColorReactivity: 92,
++    calmSectionIntensity: -18,
++    loudSectionIntensity: 92,
++    globalGlowLimit: 8,
++    backgroundResponse: 8,
++    absoluteLoudnessScaling: 6,
 +    starsEnabled: true,
 +    starShape: "crossStar",
-+    starAmount: 52,
-+    starBrightness: 66,
-+    starSize: 42,
-+    starTwinkleSpeed: 84,
-+    starVocalSensitivity: 68,
-+    starBeatSensitivity: 36,
++    starAmount: 66,
++    starBrightness: 82,
++    starSize: 50,
++    starTwinkleSpeed: 88,
++    starVocalSensitivity: 74,
++    starBeatSensitivity: 42,
 +  },
 +};
 +
@@ -8198,8 +8518,21 @@ index 0000000000000000000000000000000000000000..07b80a3acad16258bc7d59bdfc5a584b
 +  return `custom-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
 +}
 +
++function createUniquePresetId(usedIds?: Set<string>): string {
++  let id = createPresetId();
++  while (usedIds?.has(id)) {
++    id = createPresetId();
++  }
++  usedIds?.add(id);
++  return id;
++}
++
 +function normalizeCustomPresetName(name: string): string {
 +  return name.trim().replace(/\s+/g, " ").slice(0, 48);
++}
++
++function isRecord(value: unknown): value is Record<string, unknown> {
++  return Boolean(value) && typeof value === "object" && !Array.isArray(value);
 +}
 +
 +function clampNumber(value: unknown, min: number, max: number, fallback: number): number {
@@ -8212,6 +8545,10 @@ index 0000000000000000000000000000000000000000..07b80a3acad16258bc7d59bdfc5a584b
 +  return ["mixed", "softDot", "realStar", "sparkleStar", "crossStar"].includes(String(value))
 +    ? String(value)
 +    : VISUALIZER_PRESET_VALUES.vanilla.starShape;
++}
++
++function hasOnlySupportedPresetValueKeys(value: Record<string, unknown>): boolean {
++  return Object.keys(value).every((key) => SUPPORTED_PRESET_VALUE_KEY_SET.has(key));
 +}
 +
 +function sanitizePresetValues(value: Partial<VisualizerPresetValues>): VisualizerPresetValues {
@@ -8300,26 +8637,68 @@ index 0000000000000000000000000000000000000000..07b80a3acad16258bc7d59bdfc5a584b
 +  };
 +}
 +
-+function sanitizeCustomPreset(value: unknown): CustomVisualizerPreset | null {
-+  if (!value || typeof value !== "object") return null;
++function sanitizeCustomPreset(
++  value: unknown,
++  options: { strictValues?: boolean; usedIds?: Set<string> } = {}
++): CustomVisualizerPreset | null {
++  if (!isRecord(value)) return null;
 +
 +  const preset = value as Partial<CustomVisualizerPreset>;
 +  const name = normalizeCustomPresetName(String(preset.name ?? ""));
-+  if (!name || !preset.values) return null;
++  if (!name || !isRecord(preset.values)) return null;
++  if (options.strictValues && !hasOnlySupportedPresetValueKeys(preset.values)) return null;
++
++  const requestedId = String(preset.id || "").trim();
++  const id =
++    requestedId && !options.usedIds?.has(requestedId)
++      ? requestedId
++      : createUniquePresetId(options.usedIds);
++  options.usedIds?.add(id);
++
++  const now = Date.now();
++  const createdAt = Number(preset.createdAt);
++  const updatedAt = Number(preset.updatedAt);
 +
 +  return {
-+    id: String(preset.id || createPresetId()),
++    id,
 +    name,
 +    values: sanitizePresetValues(preset.values),
-+    createdAt: Number(preset.createdAt || Date.now()),
-+    updatedAt: Number(preset.updatedAt || Date.now()),
++    createdAt: Number.isFinite(createdAt) ? createdAt : now,
++    updatedAt: Number.isFinite(updatedAt) ? updatedAt : now,
 +  };
++}
++
++function parseCustomPresetImportPayload(raw: string): unknown[] {
++  let parsed: unknown;
++  try {
++    parsed = JSON.parse(raw);
++  } catch {
++    throw new Error("Invalid preset JSON");
++  }
++
++  if (!isRecord(parsed)) {
++    throw new Error("Invalid preset JSON");
++  }
++
++  if (!Object.prototype.hasOwnProperty.call(parsed, "version")) {
++    throw new Error("Invalid preset JSON");
++  }
++
++  if (Number(parsed.version) !== 1) {
++    throw new Error("Invalid preset JSON");
++  }
++
++  if (!Array.isArray(parsed.presets)) {
++    throw new Error("Invalid preset JSON");
++  }
++
++  return parsed.presets;
 +}
 +
 +export function getCustomVisualizerPresets(): CustomVisualizerPreset[] {
 +  return $customVisualizerPresets
 +    .get()
-+    .map(sanitizeCustomPreset)
++    .map((preset) => sanitizeCustomPreset(preset))
 +    .filter((preset): preset is CustomVisualizerPreset => Boolean(preset));
 +}
 +
@@ -8500,20 +8879,21 @@ index 0000000000000000000000000000000000000000..07b80a3acad16258bc7d59bdfc5a584b
 +}
 +
 +export function importCustomVisualizerPresets(raw: string): number {
-+  const parsed = JSON.parse(raw) as { presets?: unknown[] } | unknown[];
-+  const incoming = Array.isArray(parsed) ? parsed : parsed.presets;
-+  if (!Array.isArray(incoming)) return 0;
-+
++  const incoming = parseCustomPresetImportPayload(raw);
 +  const existing = getCustomVisualizerPresets();
-+  const existingIds = new Set(existing.map((preset) => preset.id));
-+  const imported = incoming
-+    .map(sanitizeCustomPreset)
-+    .filter((preset): preset is CustomVisualizerPreset => Boolean(preset))
-+    .map((preset) => ({
++  const usedIds = new Set(existing.map((preset) => preset.id));
++  const imported: CustomVisualizerPreset[] = [];
++
++  for (const item of incoming) {
++    const preset = sanitizeCustomPreset(item, { strictValues: true, usedIds });
++    if (!preset) {
++      throw new Error("Invalid preset JSON");
++    }
++    imported.push({
 +      ...preset,
-+      id: existingIds.has(preset.id) ? createPresetId() : preset.id,
 +      updatedAt: Date.now(),
-+    }));
++    });
++  }
 +
 +  if (!imported.length) return 0;
 +  setCustomVisualizerPresets([...existing, ...imported]);

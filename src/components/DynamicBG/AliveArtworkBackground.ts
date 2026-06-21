@@ -237,12 +237,12 @@ function getSettings(): BackgroundVisualSettings {
     renderScale,
     starsEnabled: $starsEnabled.get(),
     starShape: $starShape.get(),
-    starAmount: Math.round(lerp(6, 120, clamp($starAmount.get() / 100))),
-    starSize: lerp(1.4, 14.8, clamp($starSize.get() / 100)),
-    starBrightness: lerp(0.34, 3.7, clamp($starBrightness.get() / 100)),
-    starTwinkleSpeed: lerp(0.55, 2.75, clamp($starTwinkleSpeed.get() / 100)),
-    starVocalSensitivity: lerp(0.45, 2.6, clamp($starVocalSensitivity.get() / 100)),
-    starBeatSensitivity: lerp(0, 1.32, clamp($starBeatSensitivity.get() / 100)),
+    starAmount: Math.round(lerp(6, 132, clamp($starAmount.get() / 100))),
+    starSize: lerp(1.4, 17.6, clamp($starSize.get() / 100)),
+    starBrightness: lerp(0.38, 4.4, clamp($starBrightness.get() / 100)),
+    starTwinkleSpeed: lerp(0.55, 3.05, clamp($starTwinkleSpeed.get() / 100)),
+    starVocalSensitivity: lerp(0.45, 2.85, clamp($starVocalSensitivity.get() / 100)),
+    starBeatSensitivity: lerp(0, 1.55, clamp($starBeatSensitivity.get() / 100)),
   };
 }
 
@@ -476,7 +476,7 @@ export class AliveArtworkBackground {
 
     const snapshot = this.readAudioSnapshot();
     this.smoothSignals(snapshot, settings, deltaMs);
-    this.updateKawarpSpeed(settings, snapshot, deltaMs);
+    this.updateKawarpSpeed(settings, snapshot);
     this.renderLights(settings, deltaMs, now);
     this.renderStars(settings, deltaMs, now);
     return true;
@@ -542,9 +542,9 @@ export class AliveArtworkBackground {
   }
 
   private getMaxStarCount(settings: BackgroundVisualSettings) {
-    if (settings.performanceMode === "low") return 24;
-    if (settings.performanceMode === "medium") return 48;
-    return 82;
+    if (settings.performanceMode === "low") return 28;
+    if (settings.performanceMode === "medium") return 54;
+    return 92;
   }
 
   private hasCustomGlow(settings: BackgroundVisualSettings) {
@@ -570,14 +570,14 @@ export class AliveArtworkBackground {
     const loudnessThreshold = mapAroundNeutral(
       settings.absoluteLoudnessScaling,
       0.3,
-      0.18,
-      0.48
+      0.44,
+      0.12
     );
     const loudnessFloor = mapAroundNeutral(
       settings.absoluteLoudnessScaling,
       0.02,
-      0.006,
-      0.16
+      0.2,
+      0.06
     );
     const loudnessGate = smoothstep(loudnessThreshold, 0.96, snapshot.absoluteLoudness);
     const gatedLoudness = clamp(
@@ -672,28 +672,28 @@ export class AliveArtworkBackground {
 
   private updateKawarpSpeed(
     settings: BackgroundVisualSettings,
-    snapshot: BackgroundAudioSnapshot,
-    deltaMs: number
+    snapshot: BackgroundAudioSnapshot
   ) {
-    const movementScale = scaleAroundNeutral(settings.movementSpeed, 0.42, 2.1);
-    const beatdropScale = scaleAroundNeutral(settings.beatdropMultiplier, 0.62, 2.25);
+    const movementScale = scaleAroundNeutral(settings.movementSpeed, 0.42, 2.25);
+    const beatdropScale = scaleAroundNeutral(settings.beatdropMultiplier, 0.62, 2.45);
+    const loudScale = scaleAroundNeutral(settings.loudSectionIntensity, 0.7, 1.65);
     const dropDriveRaw =
       this.visualSignals.drop * 0.36 +
       this.visualSignals.impact * 0.22 +
       this.visualSignals.beat * 0.14 +
       this.visualSignals.transient * 0.05;
-    const dropDrive = smoothstep(0.22, 0.88, dropDriveRaw);
-    const dynamicBeatdrop = lerp(1, beatdropScale, dropDrive);
+    const dropDrive = smoothstep(0.18, 0.84, dropDriveRaw);
+    const dynamicBeatdrop = lerp(1, beatdropScale, clamp(dropDrive * loudScale));
     const pausedBase = snapshot.isPlaying ? 1 : 0.1;
     const baseSpeed = snapshot.baseAnimationSpeed || pausedBase;
-    const targetSpeed = clamp(baseSpeed * movementScale * dynamicBeatdrop, 0.06, 2.35);
-    const speedResponse = scaleAroundNeutral(settings.response, 1.55, 0.82);
+    const targetSpeed = clamp(baseSpeed * movementScale * dynamicBeatdrop, 0.06, 2.55);
+    const speedResponse = scaleAroundNeutral(settings.response, 1.45, 0.74);
     const speed = approach(
       this.smoothedKawarpSpeed,
       targetSpeed,
-      deltaMs,
-      220 * speedResponse,
-      720 * speedResponse
+      1000 / Math.max(24, settings.fpsLimit),
+      180 * speedResponse,
+      620 * speedResponse
     );
     this.smoothedKawarpSpeed = speed;
 
@@ -944,13 +944,13 @@ export class AliveArtworkBackground {
 
     this.setLightsVisible(true);
 
-    const waveGlowScale = scaleAroundNeutral(settings.waveGlowStrength, 0.34, 2.35);
-    const beatBrightnessScale = scaleAroundNeutral(settings.beatBrightness, 0.55, 1.75);
-    const impactScale = scaleAroundNeutral(settings.dropImpact, 0.55, 1.95);
-    const localVariationScale = scaleAroundNeutral(settings.localWaveVariation, 0.55, 2.05);
-    const calmScale = scaleAroundNeutral(settings.calmSectionIntensity, 0.2, 1.35);
-    const loudScale = scaleAroundNeutral(settings.loudSectionIntensity, 0.62, 1.72);
-    const glowLimitScale = mapAroundNeutral(settings.glowLimit, 0.082, 0.035, 0.16);
+    const waveGlowScale = scaleAroundNeutral(settings.waveGlowStrength, 0.28, 2.9);
+    const beatBrightnessScale = scaleAroundNeutral(settings.beatBrightness, 0.42, 2.35);
+    const impactScale = scaleAroundNeutral(settings.dropImpact, 0.42, 2.45);
+    const localVariationScale = scaleAroundNeutral(settings.localWaveVariation, 0.42, 2.4);
+    const calmScale = scaleAroundNeutral(settings.calmSectionIntensity, 0.16, 1.55);
+    const loudScale = scaleAroundNeutral(settings.loudSectionIntensity, 0.5, 2.15);
+    const glowLimitScale = mapAroundNeutral(settings.glowLimit, 0.095, 0.045, 0.24);
     const waveGlowPositive = positiveTuning(settings.waveGlowStrength);
     const waveGlowNegative = negativeTuning(settings.waveGlowStrength);
     const brightnessPositive = positiveTuning(settings.beatBrightness);
@@ -977,42 +977,42 @@ export class AliveArtworkBackground {
         this.visualSignals.bass * 0.08 +
         this.visualSignals.loudness * 0.06
     );
-    const loudSectionEnergy = clamp(
-      this.visualSignals.drop * 0.4 +
+    const chorusLift = clamp(
+      (this.visualSignals.drop * 0.4 +
         this.visualSignals.impact * 0.32 +
         this.visualSignals.loudness * 0.1 +
-        this.visualSignals.beat * 0.06
+        this.visualSignals.beat * 0.06) *
+        loudScale
     );
-    const chorusLift = clamp(loudSectionEnergy * loudScale);
-    const sceneEnergy = clamp(fieldEnergy * 0.72 + pulseEnergy * 0.12 + chorusLift * 0.32);
+    const sceneEnergy = clamp(fieldEnergy * 0.68 + pulseEnergy * 0.14 + chorusLift * 0.45);
     const localParticipation = smoothstep(0.12, 0.4, sceneEnergy);
     const broadParticipation = smoothstep(0.34, 0.72, sceneEnergy + chorusLift * 0.14);
     const peakParticipation = smoothstep(0.58, 0.98, chorusLift + sceneEnergy * 0.22);
     const activeRegionFraction = clamp(
       0.1 +
         waveGlowPositive * 0.04 +
-        localParticipation * (0.1 + calmPositive * 0.035) +
-        broadParticipation * (0.11 + impactPositive * 0.13) +
-        peakParticipation * (0.16 + impactPositive * 0.17 + loudPositive * 0.045) -
+        localParticipation * (0.12 + calmPositive * 0.05) +
+        broadParticipation * (0.12 + impactPositive * 0.1) +
+        peakParticipation * (0.18 + impactPositive * 0.2 + loudPositive * 0.08) -
         impactNegative * 0.18 -
         localVariationNegative * 0.1,
       0.08,
-      lerp(0.55, 0.82, clamp(peakParticipation * 0.75 + impactPositive * 0.25))
+      lerp(0.62, 0.92, peakParticipation + impactPositive * 0.35)
     );
     const fieldFloor = clamp(
       fieldEnergy *
         localParticipation *
         calmScale *
-        (0.012 + waveGlowPositive * 0.04 + brightnessPositive * 0.012) *
+        (0.016 + waveGlowPositive * 0.055 + brightnessPositive * 0.022 + impactPositive * 0.012) *
         lerp(1, 0.5, waveGlowNegative),
       0,
-      0.075
+      0.11
     );
     const chorusField = clamp(
-      (chorusLift * 0.42 + broadParticipation * 0.03 + peakParticipation * 0.052) *
-        (0.014 + waveGlowPositive * 0.028 + impactPositive * 0.018 + loudPositive * 0.026),
+      (chorusLift * 0.58 + broadParticipation * 0.045 + peakParticipation * 0.09) *
+        (0.018 + impactPositive * 0.058 + waveGlowPositive * 0.032 + loudPositive * 0.028),
       0,
-      0.11
+      0.16
     );
 
     const rawTargets: number[] = [];
@@ -1062,9 +1062,12 @@ export class AliveArtworkBackground {
         (fieldFloor * waveGlowScale +
           chorusField * (0.62 + emitter.featureScore * 0.28) +
           colorSignal *
-            (0.095 + waveGlowPositive * 0.12 + localParticipation * 0.035) +
-          fieldEnergy * waveGlowScale * (0.022 + broadParticipation * 0.055) +
-          pulseEnergy * impactScale * (0.052 + peakParticipation * 0.035)) *
+            (0.105 +
+              waveGlowPositive * 0.16 +
+              brightnessPositive * 0.04 +
+              localParticipation * 0.035) +
+          fieldEnergy * waveGlowScale * (0.035 + broadParticipation * 0.095) +
+          pulseEnergy * impactScale * (0.07 + peakParticipation * 0.045)) *
           emitter.intensity *
           beatBrightnessScale *
           (0.78 + emitter.featureScore * 0.28) *
@@ -1089,16 +1092,16 @@ export class AliveArtworkBackground {
           : smoothstep(
               Math.max(0, cutoff * lerp(0.3, 0.16, broadParticipation)),
               Math.max(0.001, cutoff * lerp(1.12, 0.94, peakParticipation)),
-              rawTarget + fieldFloor * (0.04 + broadParticipation * 0.08) + chorusField * 0.08
+              rawTarget + fieldFloor * (0.08 + broadParticipation * 0.16) + chorusField * 0.18
             );
       const floorTarget =
-        (fieldFloor * (0.16 + emitter.featureScore * 0.12) +
-          chorusField * (0.06 + peakParticipation * 0.08)) *
+        (fieldFloor * (0.22 + emitter.featureScore * 0.18) +
+          chorusField * (0.1 + peakParticipation * 0.12)) *
         lerp(1, 0.58, waveGlowNegative);
       const target = clamp(
         Math.max(floorTarget, rawTarget * regionalGate) *
           (0.82 + emitter.featureScore * 0.2) *
-          lerp(1, 1.18, peakParticipation)
+          lerp(1, 1.28, peakParticipation)
       );
 
       emitter.current = approach(
@@ -1114,24 +1117,13 @@ export class AliveArtworkBackground {
 
     const combinedGlow =
       activeIntensities.reduce((sum, value) => sum + value, 0) / Math.max(1, this.emitters.length);
-    const brightnessPressure = clamp(
-      waveGlowPositive * 0.32 +
-        brightnessPositive * 0.34 +
-        impactPositive * 0.18 +
-        loudPositive * 0.16
-    );
-    const safeGlowLimit =
-      glowLimitScale * lerp(1, 0.72, brightnessPressure * (0.35 + broadParticipation * 0.65));
-    const globalScale = combinedGlow > safeGlowLimit ? safeGlowLimit / combinedGlow : 1;
+    const globalScale = combinedGlow > glowLimitScale ? glowLimitScale / combinedGlow : 1;
     const fieldBloom =
-      0.34 + waveGlowPositive * 0.18 + impactPositive * 0.09 + peakParticipation * 0.1;
+      0.42 + waveGlowPositive * 0.24 + impactPositive * 0.14 + peakParticipation * 0.12;
 
     context.globalCompositeOperation = "screen";
 
     for (const emitter of this.emitters) {
-      const brightColorGuard = lerp(1, 0.58, smoothstep(0.64, 0.92, emitter.lightness));
-      const brightSceneGuard = lerp(1, 0.78, brightnessPressure * broadParticipation);
-      const alphaGuard = brightColorGuard * brightSceneGuard;
       const intensity = emitter.current * globalScale;
       if (intensity <= 0.01) continue;
 
@@ -1148,38 +1140,33 @@ export class AliveArtworkBackground {
       const y = (emitter.y + offsetY) * height;
       const radius = Math.max(
         28,
-        emitter.radius *
+          emitter.radius *
           Math.min(width, height) *
-          (0.78 +
-            fieldBloom * 0.16 +
-            this.visualSignals.beat * 0.04 +
-            this.visualSignals.drop * 0.08)
+          (0.82 + fieldBloom * 0.18 + this.visualSignals.beat * 0.06 + this.visualSignals.drop * 0.12)
       );
-      const haloRadius = radius * (1 + waveGlowPositive * 0.14 + peakParticipation * 0.1);
+      const haloRadius = radius * (1.05 + waveGlowPositive * 0.2 + peakParticipation * 0.14);
       const pulseRadius =
-        radius * (0.62 + this.visualSignals.beat * 0.035 + this.visualSignals.drop * 0.065);
+        radius * (0.64 + this.visualSignals.beat * 0.04 + this.visualSignals.drop * 0.08);
 
       const [red, green, blue] = emitter.glowColor;
       const outerAlpha = clamp(
         intensity *
-          alphaGuard *
           (0.028 +
-            waveGlowPositive * 0.044 +
-            brightnessPositive * 0.022 +
-            peakParticipation * 0.04),
+            waveGlowPositive * 0.055 +
+            brightnessPositive * 0.032 +
+            peakParticipation * 0.052),
         0,
-        0.16
+        0.2
       );
       const pulseAlpha = clamp(
         intensity *
-          alphaGuard *
           (0.026 +
-            brightnessPositive * 0.032 +
-            pulseEnergy * 0.028 +
-            peakParticipation * 0.026 +
+            brightnessPositive * 0.044 +
+            pulseEnergy * 0.034 +
+            peakParticipation * 0.032 +
             this.visualSignals.presence * 0.008),
         0,
-        0.13
+        0.16
       );
 
       context.save();
@@ -1249,7 +1236,7 @@ export class AliveArtworkBackground {
     const vocalDrive = clamp(
       (phraseEnergy * 0.56 + sustainEnergy * 0.44) * settings.starVocalSensitivity
     );
-    const beatDrive = clamp(beatEnergy * settings.starBeatSensitivity * 0.42);
+    const beatDrive = clamp(beatEnergy * settings.starBeatSensitivity * 0.5);
 
     for (const star of this.stars) {
       const slowTwinkle =
@@ -1335,7 +1322,7 @@ export class AliveArtworkBackground {
           beatLift * 0.03 +
           flare * 0.14,
         0.02,
-        0.84
+        0.92
       );
       const targetBrightness = clamp(
         settings.starBrightness *
@@ -1346,7 +1333,7 @@ export class AliveArtworkBackground {
             beatLift * 0.06 +
             flare * 0.92),
         0.22,
-        4.9
+        6
       );
       const targetScale = clamp(
         0.82 +
@@ -1356,7 +1343,7 @@ export class AliveArtworkBackground {
           flare * 0.24 * shapeScaleBoost +
           star.sizeScale * 0.05,
         0.7,
-        1.74
+        1.96
       );
       const targetGlow = clamp(
         0.16 +
@@ -1366,7 +1353,7 @@ export class AliveArtworkBackground {
           beatLift * 0.03 +
           flare * 0.76 * shapeGlowBoost,
         0.08,
-        1.82
+        2.2
       );
       const targetCoreOpacity = clamp(
         0.42 + livingTwinkle * 0.2 + vocalLift * 0.14 + breathLift * 0.05 + flare * 0.28,

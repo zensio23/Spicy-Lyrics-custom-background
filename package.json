@@ -1,12 +1,12 @@
 {
-  "name": "spicy-lyrics",
-  "author": "Spikerko",
+  "name": "spicy-lyrics-custom-background",
+  "author": "zensio23",
   "scripts": {
     "sc": "spicetify-creator",
     "dev": "spicetify-creator dev",
     "build": "spicetify-creator build",
-    "lint": "oxlint . --disable-nested-config --ignore-pattern release/**",
-    "lint:fix": "oxlint . --disable-nested-config --ignore-pattern release/** --fix",
+    "lint": "oxlint . --disable-nested-config --ignore-pattern \"release/**\"",
+    "lint:fix": "oxlint . --disable-nested-config --ignore-pattern \"release/**\" --fix",
     "fmt": "oxfmt",
     "upstream:check": "bun scripts/check-upstream.mjs",
     "upstream:export-patch": "bun scripts/export-custom-layer.mjs",

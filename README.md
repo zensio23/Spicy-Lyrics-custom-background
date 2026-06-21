@@ -1,42 +1,74 @@
-# Spicy Lyrics
+# Spicy Lyrics Custom Background
 
-### Check out our *[Sitee](https://yoursit.ee/lyrics)*
-#### Make your own at -> [https://yoursit.ee](https://yoursit.ee)
+An experimental visualizer-focused fork of Spicy Lyrics that expands the fullscreen background experience with dynamic wave illumination, vocal-reactive stars, advanced customization, and enhanced audio-reactive visuals.
 
-# How to install Spicy Lyrics
+The goal of this project is to explore alternative visual directions while preserving the clean and immersive experience that makes Spicy Lyrics unique.
 
-## 1. Using the Spicetify Marketplace (recommended)
-1. Search `Spicy Lyrics` under the "Extensions" tab
-2. Click the Install button on the Spicy Lyrics extension
-3. All done!
+## Features
 
-## 2. Externally (not recommended)
-1. Make sure you have [Spicetify](https://spicetify.app) installed
-2. Build the local custom version with `bun run build` or use `install-spicy-lyrics.bat`
-3. Copy both [spicy-lyrics.js](./dist/spicy-lyrics.js) and [spicy-lyrics.mjs](./builds/spicy-lyrics.mjs) into the Spicetify Extensions directory. Find the correct directory here: [https://spicetify.app/docs/customization/extensions#manual-installation](https://spicetify.app/docs/customization/extensions#manual-installation)
-4. Then, run ```spicetify config extensions spicy-lyrics.js```
-5. Then apply Spicetify by running ```spicetify apply```
-6. All done!
+* Dynamic Wave Illumination
+* Vocal-Reactive Stars
+* Advanced Audio-Reactive Controls
+* Custom Presets
+* Preset Import / Export
+* Enhanced Fullscreen Backgrounds
+* Improved Visual Customization
+* Multiple Visualizer Styles and Tuning Options
 
-## Keeping this custom branch up to date
+### Included Presets
 
-If you are using the custom visualizer branch from this workspace, use the upstream-safe workflow in [docs/UPSTREAM_UPDATES.md](./docs/UPSTREAM_UPDATES.md).
+* Vanilla
+* Smooth
+* Cinematic
+* Energetic
+* Eventually
+* Snow Strippers / Strokes
 
-Quick commands:
+## Installation
 
-```bash
-bun run upstream:check
-bun run upstream:update
-update-from-upstream.bat
-```
+### Requirements
 
-[![Github Version](https://img.shields.io/github/v/release/spikerko/spicy-lyrics)](https://github.com/spikerko/spicy-lyrics/) [![Github Stars badge](https://img.shields.io/github/stars/spikerko/spicy-lyrics?style=social)](https://github.com/spikerko/spicy-lyrics/) [![Discord Badge](https://dcbadge.limes.pink/api/server/uqgXU5wh8j?style=flat)](https://discord.com/invite/uqgXU5wh8j)
+* Spicetify installed and configured
 
-Hi, I'm Spikerko (the person who made this repo). I've been really passionate about this project, and I'm really happy for this project.
+### Setup
 
-I've seen a problem with the Spotify Lyrics. They're plain, just static colors. So I wanted to build my own version. And here it is: **Spicy Lyrics**. Hope you like it!
+1. Download the latest release.
+2. Extract the archive.
+3. Run `install-spicy-lyrics.bat`.
+4. Wait for the installation to finish.
+5. Restart Spotify.
 
-![Extension Example](./previews/page.gif)
+The installer automatically downloads and configures everything required.
+
+## Project Goal
+
+This project is not intended to become an over-the-top spectrum visualizer.
+
+Instead, the focus is on creating a more immersive, customizable, and music-responsive background experience while maintaining readability, aesthetics, and everyday usability.
+
+## Development Status
+
+This project is experimental and actively evolving.
+
+Visual tuning, presets, and effects may continue to change based on feedback and future testing.
+
+## Credits
+
+Built upon the excellent foundation provided by the Spicy Lyrics project and its contributors.
+
+A huge thank you to everyone who helped create and maintain the original project.
+
+## Disclaimer
+
+This project was developed with AI-assisted programming tools.
+
+The concepts, visual direction, feature ideas, testing, tuning decisions, and overall project goals were defined and guided by the project author.
 
 
-*Inspired by [Beautiful Lyrics](https://github.com/surfbryce/beautiful-lyrics)*
+## Links
+
+**GitHub Repository**
+https://github.com/zensio23/Spicy-Lyrics-custom-background
+
+**Issues & Feedback**
+https://github.com/zensio23/Spicy-Lyrics-custom-background/issues

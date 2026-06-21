@@ -1,32 +1,32 @@
 [
   {
-    "name": "Spicy Lyrics",
-    "description": "Spicy Lyrics is a better lyrics experience (compared to Spotify Lyrics) for Spotify. It brings word-by-word lyrics (karaoke style), beautiful animations, and more. Come and give it a try!",
-    "preview": "./previews/square-s.gif",
+    "name": "Spicy Lyrics Custom Background",
+    "description": "An enhanced fullscreen background and visualizer fork of Spicy Lyrics featuring dynamic wave illumination, vocal-reactive stars, custom presets, and advanced audio-reactive controls.",
+    "preview": "./previews/preview.gif",
     "main": "./builds/spicy-lyrics.mjs",
     "readme": "README.md",
     "branch": "main",
-    "authors": [{ "name": "Spikerko", "url": "https://github.com/Spikerko" }],
+    "authors": [
+      {
+        "name": "zensio23",
+        "url": "https://github.com/zensio23"
+      }
+    ],
     "tags": [
-      "lyrics",
-      "spicy-lyrics",
-      "word-to-word-lyrics",
-      "karaoke",
       "spicetify",
-      "syllable-lyrics",
-      "syllable",
-      "smooth",
-      "beautiful",
-      "spicy",
-      "animated",
+      "lyrics",
+      "karaoke",
+      "visualizer",
+      "audio-reactive",
+      "fullscreen",
       "background",
-      "backgrounds",
-      "dynamic",
-      "pretty",
-      "romanization",
-      "romaji",
-      "pinyin",
-      "customizable"
+      "dynamic-background",
+      "customization",
+      "presets",
+      "animated",
+      "immersive",
+      "stars",
+      "wave-effects"
     ]
   }
 ]

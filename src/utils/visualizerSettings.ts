@@ -66,6 +66,30 @@ export interface CustomVisualizerPreset {
   updatedAt: number;
 }
 
+const SUPPORTED_PRESET_VALUE_KEYS = [
+  "backgroundBeatBrightness",
+  "backgroundBeatGlowStrength",
+  "backgroundDropImpact",
+  "backgroundMovementSpeed",
+  "beatdropSpeedMultiplier",
+  "perColorReactivity",
+  "calmSectionIntensity",
+  "loudSectionIntensity",
+  "globalGlowLimit",
+  "backgroundResponse",
+  "absoluteLoudnessScaling",
+  "starsEnabled",
+  "starShape",
+  "starAmount",
+  "starBrightness",
+  "starSize",
+  "starTwinkleSpeed",
+  "starVocalSensitivity",
+  "starBeatSensitivity",
+] as const satisfies readonly (keyof VisualizerPresetValues)[];
+
+const SUPPORTED_PRESET_VALUE_KEY_SET = new Set<string>(SUPPORTED_PRESET_VALUE_KEYS);
+
 export const VISUALIZER_PRESET_ORDER: VisualizerPreset[] = [
   "vanilla",
   "cinematic",
@@ -103,17 +127,17 @@ export const VISUALIZER_PRESET_VALUES: Record<
     starBeatSensitivity: 16,
   },
   smooth: {
-    backgroundBeatBrightness: -18,
-    backgroundBeatGlowStrength: 18,
-    backgroundDropImpact: -14,
-    backgroundMovementSpeed: -48,
-    beatdropSpeedMultiplier: -38,
-    perColorReactivity: 18,
-    calmSectionIntensity: -34,
-    loudSectionIntensity: -26,
-    globalGlowLimit: -42,
-    backgroundResponse: -62,
-    absoluteLoudnessScaling: 34,
+    backgroundBeatBrightness: -12,
+    backgroundBeatGlowStrength: 24,
+    backgroundDropImpact: -8,
+    backgroundMovementSpeed: -44,
+    beatdropSpeedMultiplier: -34,
+    perColorReactivity: 24,
+    calmSectionIntensity: -26,
+    loudSectionIntensity: -18,
+    globalGlowLimit: -34,
+    backgroundResponse: -56,
+    absoluteLoudnessScaling: -28,
     starsEnabled: false,
     starShape: "softDot",
     starAmount: 28,
@@ -124,17 +148,17 @@ export const VISUALIZER_PRESET_VALUES: Record<
     starBeatSensitivity: 8,
   },
   cinematic: {
-    backgroundBeatBrightness: 10,
-    backgroundBeatGlowStrength: 54,
-    backgroundDropImpact: 38,
-    backgroundMovementSpeed: -10,
-    beatdropSpeedMultiplier: 10,
-    perColorReactivity: 46,
-    calmSectionIntensity: -22,
-    loudSectionIntensity: 28,
-    globalGlowLimit: -18,
-    backgroundResponse: -34,
-    absoluteLoudnessScaling: 14,
+    backgroundBeatBrightness: 18,
+    backgroundBeatGlowStrength: 70,
+    backgroundDropImpact: 54,
+    backgroundMovementSpeed: -6,
+    beatdropSpeedMultiplier: 18,
+    perColorReactivity: 64,
+    calmSectionIntensity: -18,
+    loudSectionIntensity: 48,
+    globalGlowLimit: -8,
+    backgroundResponse: -28,
+    absoluteLoudnessScaling: -8,
     starsEnabled: false,
     starShape: "realStar",
     starAmount: 32,
@@ -145,17 +169,17 @@ export const VISUALIZER_PRESET_VALUES: Record<
     starBeatSensitivity: 10,
   },
   energetic: {
-    backgroundBeatBrightness: 24,
-    backgroundBeatGlowStrength: 88,
-    backgroundDropImpact: 82,
-    backgroundMovementSpeed: 18,
-    beatdropSpeedMultiplier: 58,
-    perColorReactivity: 64,
-    calmSectionIntensity: -18,
-    loudSectionIntensity: 58,
-    globalGlowLimit: -4,
-    backgroundResponse: -10,
-    absoluteLoudnessScaling: 8,
+    backgroundBeatBrightness: 34,
+    backgroundBeatGlowStrength: 104,
+    backgroundDropImpact: 96,
+    backgroundMovementSpeed: 24,
+    beatdropSpeedMultiplier: 72,
+    perColorReactivity: 82,
+    calmSectionIntensity: -10,
+    loudSectionIntensity: 86,
+    globalGlowLimit: 6,
+    backgroundResponse: -4,
+    absoluteLoudnessScaling: 2,
     starsEnabled: false,
     starShape: "sparkleStar",
     starAmount: 44,
@@ -166,17 +190,17 @@ export const VISUALIZER_PRESET_VALUES: Record<
     starBeatSensitivity: 22,
   },
   insane: {
-    backgroundBeatBrightness: 40,
-    backgroundBeatGlowStrength: 132,
-    backgroundDropImpact: 150,
-    backgroundMovementSpeed: 46,
-    beatdropSpeedMultiplier: 130,
-    perColorReactivity: 92,
-    calmSectionIntensity: -10,
-    loudSectionIntensity: 104,
-    globalGlowLimit: 8,
-    backgroundResponse: 6,
-    absoluteLoudnessScaling: 0,
+    backgroundBeatBrightness: 52,
+    backgroundBeatGlowStrength: 148,
+    backgroundDropImpact: 166,
+    backgroundMovementSpeed: 54,
+    beatdropSpeedMultiplier: 138,
+    perColorReactivity: 116,
+    calmSectionIntensity: -4,
+    loudSectionIntensity: 132,
+    globalGlowLimit: 22,
+    backgroundResponse: 12,
+    absoluteLoudnessScaling: 8,
     starsEnabled: false,
     starShape: "crossStar",
     starAmount: 60,
@@ -187,46 +211,46 @@ export const VISUALIZER_PRESET_VALUES: Record<
     starBeatSensitivity: 34,
   },
   eventually: {
-    backgroundBeatBrightness: 0,
-    backgroundBeatGlowStrength: 46,
-    backgroundDropImpact: 24,
+    backgroundBeatBrightness: 4,
+    backgroundBeatGlowStrength: 56,
+    backgroundDropImpact: 28,
     backgroundMovementSpeed: -38,
     beatdropSpeedMultiplier: -28,
-    perColorReactivity: 62,
-    calmSectionIntensity: 8,
-    loudSectionIntensity: 22,
-    globalGlowLimit: -24,
+    perColorReactivity: 74,
+    calmSectionIntensity: 16,
+    loudSectionIntensity: 30,
+    globalGlowLimit: -18,
     backgroundResponse: -54,
-    absoluteLoudnessScaling: 20,
+    absoluteLoudnessScaling: -18,
     starsEnabled: true,
     starShape: "sparkleStar",
-    starAmount: 34,
-    starBrightness: 62,
-    starSize: 56,
-    starTwinkleSpeed: 72,
-    starVocalSensitivity: 92,
+    starAmount: 40,
+    starBrightness: 74,
+    starSize: 68,
+    starTwinkleSpeed: 86,
+    starVocalSensitivity: 100,
     starBeatSensitivity: 4,
   },
   strokesSnowStrippers: {
-    backgroundBeatBrightness: 18,
-    backgroundBeatGlowStrength: 76,
-    backgroundDropImpact: 92,
-    backgroundMovementSpeed: 46,
-    beatdropSpeedMultiplier: 112,
-    perColorReactivity: 76,
-    calmSectionIntensity: -28,
-    loudSectionIntensity: 72,
-    globalGlowLimit: -4,
-    backgroundResponse: 18,
-    absoluteLoudnessScaling: -6,
+    backgroundBeatBrightness: 30,
+    backgroundBeatGlowStrength: 94,
+    backgroundDropImpact: 108,
+    backgroundMovementSpeed: 42,
+    beatdropSpeedMultiplier: 104,
+    perColorReactivity: 92,
+    calmSectionIntensity: -18,
+    loudSectionIntensity: 92,
+    globalGlowLimit: 8,
+    backgroundResponse: 8,
+    absoluteLoudnessScaling: 6,
     starsEnabled: true,
     starShape: "crossStar",
-    starAmount: 52,
-    starBrightness: 66,
-    starSize: 42,
-    starTwinkleSpeed: 84,
-    starVocalSensitivity: 68,
-    starBeatSensitivity: 36,
+    starAmount: 66,
+    starBrightness: 82,
+    starSize: 50,
+    starTwinkleSpeed: 88,
+    starVocalSensitivity: 74,
+    starBeatSensitivity: 42,
   },
 };
 
@@ -234,8 +258,21 @@ function createPresetId(): string {
   return `custom-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
 }
 
+function createUniquePresetId(usedIds?: Set<string>): string {
+  let id = createPresetId();
+  while (usedIds?.has(id)) {
+    id = createPresetId();
+  }
+  usedIds?.add(id);
+  return id;
+}
+
 function normalizeCustomPresetName(name: string): string {
   return name.trim().replace(/\s+/g, " ").slice(0, 48);
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return Boolean(value) && typeof value === "object" && !Array.isArray(value);
 }
 
 function clampNumber(value: unknown, min: number, max: number, fallback: number): number {
@@ -248,6 +285,10 @@ function sanitizeStarShape(value: unknown): string {
   return ["mixed", "softDot", "realStar", "sparkleStar", "crossStar"].includes(String(value))
     ? String(value)
     : VISUALIZER_PRESET_VALUES.vanilla.starShape;
+}
+
+function hasOnlySupportedPresetValueKeys(value: Record<string, unknown>): boolean {
+  return Object.keys(value).every((key) => SUPPORTED_PRESET_VALUE_KEY_SET.has(key));
 }
 
 function sanitizePresetValues(value: Partial<VisualizerPresetValues>): VisualizerPresetValues {
@@ -336,26 +377,68 @@ function sanitizePresetValues(value: Partial<VisualizerPresetValues>): Visualize
   };
 }
 
-function sanitizeCustomPreset(value: unknown): CustomVisualizerPreset | null {
-  if (!value || typeof value !== "object") return null;
+function sanitizeCustomPreset(
+  value: unknown,
+  options: { strictValues?: boolean; usedIds?: Set<string> } = {}
+): CustomVisualizerPreset | null {
+  if (!isRecord(value)) return null;
 
   const preset = value as Partial<CustomVisualizerPreset>;
   const name = normalizeCustomPresetName(String(preset.name ?? ""));
-  if (!name || !preset.values) return null;
+  if (!name || !isRecord(preset.values)) return null;
+  if (options.strictValues && !hasOnlySupportedPresetValueKeys(preset.values)) return null;
+
+  const requestedId = String(preset.id || "").trim();
+  const id =
+    requestedId && !options.usedIds?.has(requestedId)
+      ? requestedId
+      : createUniquePresetId(options.usedIds);
+  options.usedIds?.add(id);
+
+  const now = Date.now();
+  const createdAt = Number(preset.createdAt);
+  const updatedAt = Number(preset.updatedAt);
 
   return {
-    id: String(preset.id || createPresetId()),
+    id,
     name,
     values: sanitizePresetValues(preset.values),
-    createdAt: Number(preset.createdAt || Date.now()),
-    updatedAt: Number(preset.updatedAt || Date.now()),
+    createdAt: Number.isFinite(createdAt) ? createdAt : now,
+    updatedAt: Number.isFinite(updatedAt) ? updatedAt : now,
   };
+}
+
+function parseCustomPresetImportPayload(raw: string): unknown[] {
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(raw);
+  } catch {
+    throw new Error("Invalid preset JSON");
+  }
+
+  if (!isRecord(parsed)) {
+    throw new Error("Invalid preset JSON");
+  }
+
+  if (!Object.prototype.hasOwnProperty.call(parsed, "version")) {
+    throw new Error("Invalid preset JSON");
+  }
+
+  if (Number(parsed.version) !== 1) {
+    throw new Error("Invalid preset JSON");
+  }
+
+  if (!Array.isArray(parsed.presets)) {
+    throw new Error("Invalid preset JSON");
+  }
+
+  return parsed.presets;
 }
 
 export function getCustomVisualizerPresets(): CustomVisualizerPreset[] {
   return $customVisualizerPresets
     .get()
-    .map(sanitizeCustomPreset)
+    .map((preset) => sanitizeCustomPreset(preset))
     .filter((preset): preset is CustomVisualizerPreset => Boolean(preset));
 }
 
@@ -536,20 +619,21 @@ export function exportCustomVisualizerPresets(): string {
 }
 
 export function importCustomVisualizerPresets(raw: string): number {
-  const parsed = JSON.parse(raw) as { presets?: unknown[] } | unknown[];
-  const incoming = Array.isArray(parsed) ? parsed : parsed.presets;
-  if (!Array.isArray(incoming)) return 0;
-
+  const incoming = parseCustomPresetImportPayload(raw);
   const existing = getCustomVisualizerPresets();
-  const existingIds = new Set(existing.map((preset) => preset.id));
-  const imported = incoming
-    .map(sanitizeCustomPreset)
-    .filter((preset): preset is CustomVisualizerPreset => Boolean(preset))
-    .map((preset) => ({
+  const usedIds = new Set(existing.map((preset) => preset.id));
+  const imported: CustomVisualizerPreset[] = [];
+
+  for (const item of incoming) {
+    const preset = sanitizeCustomPreset(item, { strictValues: true, usedIds });
+    if (!preset) {
+      throw new Error("Invalid preset JSON");
+    }
+    imported.push({
       ...preset,
-      id: existingIds.has(preset.id) ? createPresetId() : preset.id,
       updatedAt: Date.now(),
-    }));
+    });
+  }
 
   if (!imported.length) return 0;
   setCustomVisualizerPresets([...existing, ...imported]);
