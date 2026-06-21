@@ -1,67 +1,50 @@
-# Spicy Lyrics - Security Policy
+# Security Policy
 
 ## Reporting a Vulnerability
 
-If you believe you have discovered a security vulnerability affecting
-any part of this project, please report it responsibly using **one of the
-methods below**.
+If you discover a security issue affecting this project, please report it responsibly.
 
-### Preferred: GitHub Private Vulnerability Reporting
+### Preferred Method: GitHub Security Advisory
 
-For vulnerabilities affecting repositories hosted on GitHub, please use
-**GitHub’s Private Vulnerability Reporting** feature. This allows you to
-confidentially report security issues directly through the repository,
-without public disclosure.
+Use GitHub's private vulnerability reporting feature whenever possible.
 
-This is the **recommended** reporting method for GitHub-hosted components.
+### Alternative: GitHub Issue
 
-### Alternative: Email
+For non-sensitive security concerns, you may open a GitHub issue.
 
-If GitHub Private Vulnerability Reporting is unavailable or unsuitable
-for your report, you may contact us via email.
-
-**Email:** hi@spicylyrics.org
-
-Please include:
-- A clear description of the issue
-- Steps to reproduce (if applicable)
-- Potential impact
-- Any relevant logs, screenshots, or proof-of-concept details
-
-**Do not** open public GitHub issues or pull requests to report
-security vulnerabilities.
+Please do **not** publicly disclose serious vulnerabilities before they have been reviewed.
 
 ---
 
-## Project Scope
+## Scope
 
-This project is a multi-component application consisting of:
+This repository contains the source code for:
 
-- Frontend application (open source, Spicetify extension)
-- Backend services (private, SaaS)
-- Public but closed-source services
-- Supporting websites, APIs, and infrastructure
+* Spicy Lyrics Custom Background
+* Custom visualizer features
+* Audio-reactive background effects
+* Preset management and customization features
 
-Security reports affecting **any component of the project** are in scope,
-even when the affected component is closed-source, private, or operated
-as a hosted service.
+Reports related to vulnerabilities within this repository are considered in scope.
 
 ---
 
-## CVE Policy
+## What to Include
 
-CVE identifiers may be issued only for vulnerabilities affecting
-publicly distributed components.
+When reporting a vulnerability, please include:
 
-Vulnerabilities limited to backend services, private infrastructure,
-or hosted-only components may be documented without a CVE identifier.
+* A clear description of the issue
+* Steps to reproduce
+* Expected behavior
+* Actual behavior
+* Screenshots, logs, or proof-of-concept examples if available
 
 ---
 
-## Disclosure
+## Disclosure Policy
 
-We review security reports internally and determine appropriate
-remediation and disclosure on a case-by-case basis.
+Security reports will be reviewed as soon as possible.
 
-We ask that security issues are not publicly disclosed before we have
-had an opportunity to review and address the report.
+Please allow reasonable time for investigation and remediation before publicly disclosing any security-related issue.
+
+Thank you for helping improve the security and stability of this project.
